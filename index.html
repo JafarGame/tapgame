@@ -83,8 +83,29 @@ coin += earned;
 updateUI();
 
 // TAP
-coin += level * 2 * tapBoost;
+function tap(event) {
+  // 💰 COIN IMAGE EFFECT
+let coinImg = document.createElement("img");
+coinImg.src = "https://cdn-icons-png.flaticon.com/512/138/138292.png";
 
+coinImg.style.position = "absolute";
+coinImg.style.left = event.clientX + "px";
+coinImg.style.top = event.clientY + "px";
+coinImg.style.width = "30px";
+coinImg.style.pointerEvents = "none";
+coinImg.style.transition = "all 1s ease";
+
+document.body.appendChild(coinImg);
+
+setTimeout(() => {
+  coinImg.style.top = (event.clientY - 80) + "px";
+  coinImg.style.opacity = "0";
+  coinImg.style.transform = "scale(1.5) rotate(360deg)";
+}, 50);
+
+setTimeout(() => {
+  coinImg.remove();
+}, 1000);
 // 🔥 ANIMATION BOSHLANADI
 let coinEl = document.getElementById("coin");
 coinEl.classList.add("pop");
@@ -94,31 +115,12 @@ setTimeout(() => {
 }, 200);
 
 // 💰 +coin effect
-let plus = document.createElement("div");
-plus.innerText = "+" + (level * 2 * tapBoost);
-plus.style.position = "absolute";
-plus.style.left = event.clientX + "px";
-plus.style.top = event.clientY + "px";
-plus.style.color = "yellow";
-plus.style.fontSize = "20px";
-plus.style.pointerEvents = "none";
-plus.style.transition = "all 1s ease";
-
-document.body.appendChild(plus);
-
-setTimeout(() => {
-  plus.style.top = (event.clientY - 50) + "px";
-  plus.style.opacity = "0";
-}, 50);
-
-setTimeout(() => {
-  plus.remove();
 }, 1000);
 // 🔥 ANIMATION TUGADI
 
 saveData();
 updateUI();
-
+  } 
 // AUTO COIN
 let autoInterval = setInterval(() => {
   coin += level * tapBoost;
