@@ -42,6 +42,12 @@
   <div id="offline"></div>
   <button onclick="dailyBonus()">🎁 Daily Bonus</button>
 <div id="bonusMsg"></div>
+  <h2>🛒 Shop</h2>
+
+<button onclick="buyBoost()">⚡ x2 Tap (200 coin)</button>
+<button onclick="buyAuto()">🤖 Auto Speed (300 coin)</button>
+
+<div id="shopMsg"></div>
   <button onclick="withdraw()">💸 Withdraw (1000 coin)</button>
 <script>
 let coin = parseInt(localStorage.getItem("coin")) || 0;
@@ -50,6 +56,8 @@ let money = parseInt(localStorage.getItem("money")) || 0;
 let upgradeCost = parseInt(localStorage.getItem("upgradeCost")) || 50;
 let lastTime = parseInt(localStorage.getItem("lastTime")) || Date.now();
   let lastBonus = parseInt(localStorage.getItem("lastBonus")) || 0;
+  let tapBoost = parseInt(localStorage.getItem("tapBoost")) || 1;
+let autoSpeed = parseInt(localStorage.getItem("autoSpeed")) || 5000;
   let now = Date.now();
 let diff = Math.floor((now - lastTime) / 1000);
 
@@ -63,25 +71,24 @@ updateUI();
 
 // TAP
 function tap() {
-  coin += level * 2;
+  coin += level * 2 * tapBoost;
   saveData();
   updateUI();
 }
 
 // AUTO COIN
-setInterval(() => {
-  coin += level;
+let autoInterval = setInterval(() => {
+  coin += level * tapBoost;
   saveData();
   updateUI();
-}, 5000);
+}, autoSpeed);
 
 // UPGRADE
 function upgrade() {
   if (coin >= upgradeCost) {
   coin -= upgradeCost;
-level++;
+level += 1;
 upgradeCost = Math.floor(upgradeCost * 1.5);
-    level++;
     saveData();
     updateUI();
   } else {
@@ -109,6 +116,8 @@ function saveData() {
   localStorage.setItem("money", money);
   localStorage.setItem("upgradeCost", upgradeCost);
   localStorage.setItem("lastTime", Date.now());
+  localStorage.setItem("tapBoost", tapBoost);
+localStorage.setItem("autoSpeed", autoSpeed);
 }
 function withdraw() {
   if (coin >= 1000) {
@@ -146,6 +155,47 @@ function dailyBonus() {
       "⏳ Yana " + hours + " soat kuting";
   }
 }
+  function buyBoost() {
+  if (coin >= 200) {
+    coin -= 200;
+    tapBoost = 2;
+
+    localStorage.setItem("tapBoost", tapBoost);
+
+    document.getElementById("shopMsg").innerText =
+      "⚡ x2 Tap aktiv!";
+
+    saveData();
+    updateUI();
+  } else {
+    alert("Coin yetarli emas!");
+  }
+}
+
+function buyAuto() {
+  if (coin >= 300) {
+    coin -= 300;
+    autoSpeed = 2000;
+
+    localStorage.setItem("autoSpeed", autoSpeed);
+
+    document.getElementById("shopMsg").innerText =
+      "🤖 Auto tezlashdi!";
+
+    saveData();
+    updateUI();
+
+    clearInterval(autoInterval);
+
+autoInterval = setInterval(() => {
+  coin += level * tapBoost;
+  saveData();
+  updateUI();
+}, autoSpeed);
+  } else {
+    alert("Coin yetarli emas!");
+  }
+  }
 </script>
 
 </body>
