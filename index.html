@@ -89,48 +89,6 @@ coin += earned;
 updateUI();
 
 // TAP
-function tap(event) {
-  coin += level * 2 * tapBoost;
-
-  // 🪙 COIN IMAGE EFFECT
-  let coinImg = document.createElement("img");
-  coinImg.src = "https://cdn-icons-png.flaticon.com/512/138/138292.png";
-
-  coinImg.style.position = "absolute";
-  coinImg.style.left = event.clientX + "px";
-  coinImg.style.top = event.clientY + "px";
-  coinImg.style.width = "30px";
-  coinImg.style.pointerEvents = "none";
-  coinImg.style.transition = "all 1s ease";
-
-  document.body.appendChild(coinImg);
-
-  setTimeout(() => {
-  coinImg.style.top = (event.clientY - 80) + "px";
-  coinImg.style.opacity = "0";
-  coinImg.style.transform = "scale(1.5) rotate(360deg)";
-}, 50);
-  setTimeout(() => {
-  coinImg.remove();
-}, 1000);
-// 🔥 POP ANIMATION
-let coinEl = document.getElementById("coin");
-coinEl.classList.add("pop");
-
-setTimeout(() => {
-  coinEl.classList.remove("pop");
-}, 200);
-
-saveData();
-updateUI();
-}
-  // 🔥 ANIMATION BOSHLANADI
-  let coinEl = document.getElementById("coin");
-  coinEl.classList.add("pop");
-
-  setTimeout(() => {
-    coinEl.classList.remove("pop");
-  }, 200);
 
   // 🔥 ANIMATION TUGADI
   saveData();
