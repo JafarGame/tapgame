@@ -38,10 +38,13 @@
 <div id="level">Level: 1</div>
 <button onclick="tap()">🔥 TAP</button>
 <button onclick="upgrade()">⚡ Upgrade (50)</button>
+  <div id="money">Pul: $0</div>
+  <button onclick="withdraw()">💸 Withdraw (100 coin)</button>
 <script>
 let coin = localStorage.getItem("coin") || 0;
 coin = parseInt(coin);
-
+let money = localStorage.getItem("money") || 0;
+money = parseInt(money);
 let level = localStorage.getItem("level") || 1;
 level = parseInt(level);
 
@@ -77,13 +80,26 @@ function upgrade() {
 function updateUI() {
   document.getElementById("coin").innerText = coin;
   document.getElementById("level").innerText = "Level: " + level;
+  document.getElementById("money").innerText = "Pul: $" + money;
 }
 
 // SAVE
 function saveData() {
   localStorage.setItem("coin", coin);
   localStorage.setItem("level", level);
+  localStorage.setItem("money", money);
 }
+
+function withdraw() {
+  if (coin >= 100) {
+    coin -= 100;
+    money += 1;
+    saveData();
+    updateUI();
+  } else {
+    alert("Coin yetarli emas!");
+  }
+
 </script>
 
 </body>
