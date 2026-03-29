@@ -39,11 +39,15 @@
 <button onclick="tap()">🔥 TAP</button>
 
 <script>
-let coin = 0;
+let coin = localStorage.getItem("coin") || 0;
+coin = parseInt(coin);
+
+document.getElementById("coin").innerText = coin;
 
 function tap() {
   coin++;
   document.getElementById("coin").innerText = coin;
+  localStorage.setItem("coin", coin);
 }
 </script>
 
