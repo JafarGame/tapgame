@@ -37,7 +37,7 @@
 <div id="coin">0</div>
 <div id="level">Level: 1</div>
 <button onclick="tap()">🔥 TAP</button>
-
+<button onclick="upgrade()">⚡ Upgrade (50)</button>
 <script>
 let coin = localStorage.getItem("coin") || 0;
 coin = parseInt(coin);
@@ -47,36 +47,39 @@ level = parseInt(level);
 
 updateUI();
 
-// TAP bosganda
+// TAP
 function tap() {
   coin += level;
   saveData();
   updateUI();
 }
 
-// AUTO COIN (har sekund ishlaydi)
+// AUTO COIN
 setInterval(() => {
   coin += level;
   saveData();
   updateUI();
 }, 1000);
 
-// UI yangilash
+// UPGRADE
+function upgrade() {
+  if (coin >= 50) {
+    coin -= 50;
+    level++;
+    saveData();
+    updateUI();
+  } else {
+    alert("Coin yetarli emas!");
+  }
+}
+
+// UI
 function updateUI() {
   document.getElementById("coin").innerText = coin;
-
-  if (coin >= 50) {
-    level = 3;
-  } else if (coin >= 10) {
-    level = 2;
-  } else {
-    level = 1;
-  }
-
   document.getElementById("level").innerText = "Level: " + level;
 }
 
-// Saqlash
+// SAVE
 function saveData() {
   localStorage.setItem("coin", coin);
   localStorage.setItem("level", level);
