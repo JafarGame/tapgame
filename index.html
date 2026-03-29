@@ -39,7 +39,7 @@
 <button onclick="tap()">🔥 TAP</button>
 <button onclick="upgrade()">⚡ Upgrade (<span id="upgradeCost">50</span>)</button>
   <div id="money">Pul: $0</div>
-  <button onclick="withdraw()">💸 Withdraw (100 coin)</button>
+  <button onclick="withdraw()">💸 Withdraw (1000 coin)</button>
 <script>
 let coin = parseInt(localStorage.getItem("coin")) || 0;
 let level = parseInt(localStorage.getItem("level")) || 1;
@@ -49,7 +49,7 @@ updateUI();
 
 // TAP
 function tap() {
-  coin += level;
+  coin += level * 2;
   saveData();
   updateUI();
 }
@@ -59,14 +59,14 @@ setInterval(() => {
   coin += level;
   saveData();
   updateUI();
-}, 1000);
+}, 5000);
 
 // UPGRADE
 function upgrade() {
   if (coin >= upgradeCost) {
   coin -= upgradeCost;
-  level++;
-  upgradeCost = upgradeCost * 2;
+level++;
+upgradeCost = Math.floor(upgradeCost * 1.5);
     level++;
     saveData();
     updateUI();
@@ -92,8 +92,8 @@ function saveData() {
 }
 
 function withdraw() {
-  if (coin >= 100) {
-    coin -= 100;
+  if (coin >= 1000) {
+  coin -= 1000;
     money += 1;
     saveData();
     updateUI();
