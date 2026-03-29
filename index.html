@@ -84,6 +84,20 @@ updateUI();
 
 // TAP
 function tap(event) {
+  coin += level * 2 * tapBoost;
+
+  // 🔥 ANIMATION BOSHLANADI
+  let coinEl = document.getElementById("coin");
+  coinEl.classList.add("pop");
+
+  setTimeout(() => {
+    coinEl.classList.remove("pop");
+  }, 200);
+
+  // 🔥 ANIMATION TUGADI
+  saveData();
+  updateUI();
+}
   // 💰 COIN IMAGE EFFECT
 let coinImg = document.createElement("img");
 coinImg.src = "https://cdn-icons-png.flaticon.com/512/138/138292.png";
@@ -113,7 +127,6 @@ coinEl.classList.add("pop");
 setTimeout(() => {
   coinEl.classList.remove("pop");
 }, 200);
-
 // 💰 +coin effect
 }, 1000);
 // 🔥 ANIMATION TUGADI
