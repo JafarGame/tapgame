@@ -35,19 +35,42 @@
 <h1>💰 Tap Coin Game</h1>
 
 <div id="coin">0</div>
-
+<div id="level">Level: 1</div>
 <button onclick="tap()">🔥 TAP</button>
 
 <script>
 let coin = localStorage.getItem("coin") || 0;
 coin = parseInt(coin);
 
-document.getElementById("coin").innerText = coin;
+let level = localStorage.getItem("level") || 1;
+level = parseInt(level);
+
+updateUI();
 
 function tap() {
-  coin++;
+  coin += level; // levelga qarab ko‘p coin beradi
+  saveData();
+  updateUI();
+}
+
+function updateUI() {
   document.getElementById("coin").innerText = coin;
+  
+  // level hisoblash
+  if (coin >= 50) {
+    level = 3;
+  } else if (coin >= 10) {
+    level = 2;
+  } else {
+    level = 1;
+  }
+
+  document.getElementById("level").innerText = "Level: " + level;
+}
+
+function saveData() {
   localStorage.setItem("coin", coin);
+  localStorage.setItem("level", level);
 }
 </script>
 
