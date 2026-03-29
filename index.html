@@ -2,35 +2,27 @@
 <html>
 <head>
   <title>Tap Coin Game</title>
+
   <style>
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+
+    .pop {
+      animation: pop 0.2s ease;
+    }
+
+    button:active {
+      transform: scale(0.9);
+    }
+
     body {
-      @keyframes pop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.3); }
-  100% { transform: scale(1); }
-}
-
-body {
-  text-align: center;
-  font-family: sans-serif;
-  background: #0f172a;
-  color: white;
-}
-.pop {
-  animation: pop 0.2s ease;
-}
-
-button:active {
-  transform: scale(0.9);
-}
       text-align: center;
       font-family: sans-serif;
       background: #0f172a;
       color: white;
-    }
-
-    h1 {
-      margin-top: 30px;
     }
 
     #coin {
@@ -39,9 +31,9 @@ button:active {
     }
 
     button {
-      font-size: 30px;
-      padding: 15px 30px;
-      border-radius: 15px;
+      margin: 5px;
+      padding: 10px 20px;
+      border-radius: 10px;
       border: none;
       background: orange;
       color: white;
@@ -55,64 +47,123 @@ button:active {
 
 <div id="coin">0</div>
 <div id="level">Level: 1</div>
+
 <button onclick="tap(event)">🔥 TAP</button>
 <button onclick="upgrade()">⚡ Upgrade (<span id="upgradeCost">50</span>)</button>
-  <div id="money">Pul: $0</div>
-  <div id="offline"></div>
-  <button onclick="dailyBonus()">🎁 Daily Bonus</button>
-<div id="bonusMsg"></div>
-  <h2>🛒 Shop</h2>
 
+<div id="money">Pul: $0</div>
+<div id="offline"></div>
+
+<button onclick="dailyBonus()">🎁 Daily Bonus</button>
+<div id="bonusMsg"></div>
+
+<h2>🛒 Shop</h2>
 <button onclick="buyBoost()">⚡ x2 Tap (200 coin)</button>
 <button onclick="buyAuto()">🤖 Auto Speed (300 coin)</button>
 
 <div id="shopMsg"></div>
-  <button onclick="withdraw()">💸 Withdraw (1000 coin)</button>
+
+<button onclick="withdraw()">💸 Withdraw (1000 coin)</button>
+
 <script>
-let coin = parseInt(localStorage.getItem("coin")) || 0;
-let level = parseInt(localStorage.getItem("level")) || 1;
-let money = parseInt(localStorage.getItem("money")) || 0;
-let upgradeCost = parseInt(localStorage.getItem("upgradeCost")) || 50;
-let lastTime = parseInt(localStorage.getItem("lastTime")) || Date.now();
-  let lastBonus = parseInt(localStorage.getItem("lastBonus")) || 0;
-  let tapBoost = parseInt(localStorage.getItem("tapBoost")) || 1;
-let autoSpeed = parseInt(localStorage.getItem("autoSpeed")) || 5000;
-  let now = Date.now();
-let diff = Math.floor((now - lastTime) / 1000);
-
-let earned = Math.floor(diff / 5) * level;
-
-// 🔥 LIMIT (MAX 10000 coin)
-earned = Math.min(earned, 10000);
-
-coin += earned;
-updateUI();
+let coin = 0;
+let level = 1;
+let money = 0;
+let upgradeCost = 50;
+let tapBoost = 1;
+let autoSpeed = 5000;
 
 // TAP
+function tap(event) {
+  coin += level * 2 * tapBoost;
 
-  // 🔥 ANIMATION TUGADI
-  saveData();
+  let coinImg = document.createElement("img");
+  coinImg.src = "https://cdn-icons-png.flaticon.com/512/138/138292.png";
+
+  coinImg.style.position = "absolute";
+  coinImg.style.left = event.clientX + "px";
+  coinImg.style.top = event.clientY + "px";
+  coinImg.style.width = "30px";
+
+  document.body.appendChild(coinImg);
+
+  setTimeout(() => {
+    coinImg.style.top = (event.clientY - 80) + "px";
+    coinImg.style.opacity = "0";
+  }, 50);
+
+  setTimeout(() => coinImg.remove(), 1000);
+
   updateUI();
-  
-  // 💰 COIN IMAGE EFFECT
-let coinImg = document.createElement("img");
-coinImg.src = "https://cdn-icons-png.flaticon.com/512/138/138292.png";
+}
 
-coinImg.style.position = "absolute";
-coinImg.style.left = event.clientX + "px";
-coinImg.style.top = event.clientY + "px";
-coinImg.style.width = "30px";
-coinImg.style.pointerEvents = "none";
-coinImg.style.transition = "all 1s ease";
+// AUTO
+let autoInterval = setInterval(() => {
+  coin += level * tapBoost;
+  updateUI();
+}, autoSpeed);
 
-document.body.appendChild(coinImg);
+// UPGRADE
+function upgrade() {
+  if (coin >= upgradeCost) {
+    coin -= upgradeCost;
+    level++;
+    upgradeCost = Math.floor(upgradeCost * 1.5);
+    updateUI();
+  }
+}
 
-setTimeout(() => {
-  coinImg.style.top = (event.clientY - 80) + "px";
-  coinImg.style.opacity = "0";
-  coinImg.style.transform = "scale(1.5) rotate(360deg)";
-}, 50);
-<!DOCTYPE html>
+// UI
+function updateUI() {
+  document.getElementById("coin").innerText = coin;
+  document.getElementById("level").innerText = "Level: " + level;
+  document.getElementById("money").innerText = "Pul: $" + money;
+  document.getElementById("upgradeCost").innerText = upgradeCost;
+}
+
+// WITHDRAW
+function withdraw() {
+  if (coin >= 1000) {
+    coin -= 1000;
+    money += 1;
+    updateUI();
+  }
+}
+
+// BONUS
+function dailyBonus() {
+  coin += 500;
+  document.getElementById("bonusMsg").innerText = "🎉 Bonus berildi!";
+  updateUI();
+}
+
+// SHOP
+function buyBoost() {
+  if (coin >= 200) {
+    coin -= 200;
+    tapBoost = 2;
+    updateUI();
+  }
+}
+
+function buyAuto() {
+  if (coin >= 300) {
+    coin -= 300;
+    autoSpeed = 2000;
+
+    clearInterval(autoInterval);
+    autoInterval = setInterval(() => {
+      coin += level * tapBoost;
+      updateUI();
+    }, autoSpeed);
+  }
+}
+
+updateUI();
+</script>
+
+</body>
+</html><!DOCTYPE html>
 <html>
 <head>
   <title>Tap Coin Game</title>
@@ -139,23 +190,18 @@ setTimeout(() => {
       color: white;
     }
 
-    h1 {
-      margin-top: 30px;
-    }
-
     #coin {
       font-size: 40px;
       margin: 20px;
     }
 
     button {
-      font-size: 20px;
+      margin: 5px;
       padding: 10px 20px;
       border-radius: 10px;
       border: none;
       background: orange;
       color: white;
-      margin: 5px;
     }
   </style>
 </head>
@@ -179,26 +225,18 @@ setTimeout(() => {
 <h2>🛒 Shop</h2>
 <button onclick="buyBoost()">⚡ x2 Tap (200 coin)</button>
 <button onclick="buyAuto()">🤖 Auto Speed (300 coin)</button>
+
 <div id="shopMsg"></div>
 
 <button onclick="withdraw()">💸 Withdraw (1000 coin)</button>
 
 <script>
-let coin = parseInt(localStorage.getItem("coin")) || 0;
-let level = parseInt(localStorage.getItem("level")) || 1;
-let money = parseInt(localStorage.getItem("money")) || 0;
-let upgradeCost = parseInt(localStorage.getItem("upgradeCost")) || 50;
-let lastTime = parseInt(localStorage.getItem("lastTime")) || Date.now();
-let lastBonus = parseInt(localStorage.getItem("lastBonus")) || 0;
-let tapBoost = parseInt(localStorage.getItem("tapBoost")) || 1;
-let autoSpeed = parseInt(localStorage.getItem("autoSpeed")) || 5000;
-
-// OFFLINE EARNING
-let now = Date.now();
-let diff = Math.floor((now - lastTime) / 1000);
-let earned = Math.floor(diff / 5) * level;
-earned = Math.min(earned, 10000);
-coin += earned;
+let coin = 0;
+let level = 1;
+let money = 0;
+let upgradeCost = 50;
+let tapBoost = 1;
+let autoSpeed = 5000;
 
 // TAP
 function tap(event) {
@@ -211,32 +249,32 @@ function tap(event) {
   coinImg.style.left = event.clientX + "px";
   coinImg.style.top = event.clientY + "px";
   coinImg.style.width = "30px";
-  coinImg.style.pointerEvents = "none";
-  coinImg.style.transition = "all 1s ease";
 
   document.body.appendChild(coinImg);
 
   setTimeout(() => {
     coinImg.style.top = (event.clientY - 80) + "px";
     coinImg.style.opacity = "0";
-    coinImg.style.transform = "scale(1.5) rotate(360deg)";
   }, 50);
 
-  setTimeout(() => {
-    coinImg.remove();
-  }, 1000);
+  setTimeout(() => coinImg.remove(), 1000);
 
-  let coinEl = document.getElementById("coin");
-  coinEl.classList.add("pop");
-
-  setTimeout(() => {
-    coinEl.classList.remove("pop");
-  }, 200);
-
-  saveData();
   updateUI();
 }
-    alert("Coin yetarli emas!");
+
+// AUTO
+let autoInterval = setInterval(() => {
+  coin += level * tapBoost;
+  updateUI();
+}, autoSpeed);
+
+// UPGRADE
+function upgrade() {
+  if (coin >= upgradeCost) {
+    coin -= upgradeCost;
+    level++;
+    upgradeCost = Math.floor(upgradeCost * 1.5);
+    updateUI();
   }
 }
 
@@ -246,22 +284,6 @@ function updateUI() {
   document.getElementById("level").innerText = "Level: " + level;
   document.getElementById("money").innerText = "Pul: $" + money;
   document.getElementById("upgradeCost").innerText = upgradeCost;
-
-  if (earned > 0) {
-    document.getElementById("offline").innerText =
-      "Offline: +" + earned + " coin";
-  }
-}
-
-// SAVE
-function saveData() {
-  localStorage.setItem("coin", coin);
-  localStorage.setItem("level", level);
-  localStorage.setItem("money", money);
-  localStorage.setItem("upgradeCost", upgradeCost);
-  localStorage.setItem("lastTime", Date.now());
-  localStorage.setItem("tapBoost", tapBoost);
-  localStorage.setItem("autoSpeed", autoSpeed);
 }
 
 // WITHDRAW
@@ -269,36 +291,15 @@ function withdraw() {
   if (coin >= 1000) {
     coin -= 1000;
     money += 1;
-    saveData();
     updateUI();
-  } else {
-    alert("Coin yetarli emas!");
   }
 }
 
-// DAILY BONUS
+// BONUS
 function dailyBonus() {
-  let now = Date.now();
-  let diff = now - lastBonus;
-
-  if (diff >= 86400000) {
-    let bonus = 500 * level;
-    coin += bonus;
-    lastBonus = now;
-
-    localStorage.setItem("lastBonus", lastBonus);
-
-    document.getElementById("bonusMsg").innerText =
-      "🎉 Bonus: +" + bonus + " coin";
-
-    saveData();
-    updateUI();
-  } else {
-    let hours = Math.floor((86400000 - diff) / 3600000);
-
-    document.getElementById("bonusMsg").innerText =
-      "⏳ Yana " + hours + " soat kuting";
-  }
+  coin += 500;
+  document.getElementById("bonusMsg").innerText = "🎉 Bonus berildi!";
+  updateUI();
 }
 
 // SHOP
@@ -306,12 +307,7 @@ function buyBoost() {
   if (coin >= 200) {
     coin -= 200;
     tapBoost = 2;
-
-    document.getElementById("shopMsg").innerText = "⚡ x2 Tap aktiv!";
-    saveData();
     updateUI();
-  } else {
-    alert("Coin yetarli emas!");
   }
 }
 
@@ -321,22 +317,178 @@ function buyAuto() {
     autoSpeed = 2000;
 
     clearInterval(autoInterval);
-
     autoInterval = setInterval(() => {
       coin += level * tapBoost;
-      saveData();
       updateUI();
     }, autoSpeed);
-
-    document.getElementById("shopMsg").innerText = "🤖 Auto tezlashdi!";
-    saveData();
-    updateUI();
-  } else {
-    alert("Coin yetarli emas!");
   }
 }
 
-// INIT
+updateUI();
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+  <title>Tap Coin Game</title>
+
+  <style>
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+
+    .pop {
+      animation: pop 0.2s ease;
+    }
+
+    button:active {
+      transform: scale(0.9);
+    }
+
+    body {
+      text-align: center;
+      font-family: sans-serif;
+      background: #0f172a;
+      color: white;
+    }
+
+    #coin {
+      font-size: 40px;
+      margin: 20px;
+    }
+
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      background: orange;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>💰 Tap Coin Game</h1>
+
+<div id="coin">0</div>
+<div id="level">Level: 1</div>
+
+<button onclick="tap(event)">🔥 TAP</button>
+<button onclick="upgrade()">⚡ Upgrade (<span id="upgradeCost">50</span>)</button>
+
+<div id="money">Pul: $0</div>
+<div id="offline"></div>
+
+<button onclick="dailyBonus()">🎁 Daily Bonus</button>
+<div id="bonusMsg"></div>
+
+<h2>🛒 Shop</h2>
+<button onclick="buyBoost()">⚡ x2 Tap (200 coin)</button>
+<button onclick="buyAuto()">🤖 Auto Speed (300 coin)</button>
+
+<div id="shopMsg"></div>
+
+<button onclick="withdraw()">💸 Withdraw (1000 coin)</button>
+
+<script>
+let coin = 0;
+let level = 1;
+let money = 0;
+let upgradeCost = 50;
+let tapBoost = 1;
+let autoSpeed = 5000;
+
+// TAP
+function tap(event) {
+  coin += level * 2 * tapBoost;
+
+  let coinImg = document.createElement("img");
+  coinImg.src = "https://cdn-icons-png.flaticon.com/512/138/138292.png";
+
+  coinImg.style.position = "absolute";
+  coinImg.style.left = event.clientX + "px";
+  coinImg.style.top = event.clientY + "px";
+  coinImg.style.width = "30px";
+
+  document.body.appendChild(coinImg);
+
+  setTimeout(() => {
+    coinImg.style.top = (event.clientY - 80) + "px";
+    coinImg.style.opacity = "0";
+  }, 50);
+
+  setTimeout(() => coinImg.remove(), 1000);
+
+  updateUI();
+}
+
+// AUTO
+let autoInterval = setInterval(() => {
+  coin += level * tapBoost;
+  updateUI();
+}, autoSpeed);
+
+// UPGRADE
+function upgrade() {
+  if (coin >= upgradeCost) {
+    coin -= upgradeCost;
+    level++;
+    upgradeCost = Math.floor(upgradeCost * 1.5);
+    updateUI();
+  }
+}
+
+// UI
+function updateUI() {
+  document.getElementById("coin").innerText = coin;
+  document.getElementById("level").innerText = "Level: " + level;
+  document.getElementById("money").innerText = "Pul: $" + money;
+  document.getElementById("upgradeCost").innerText = upgradeCost;
+}
+
+// WITHDRAW
+function withdraw() {
+  if (coin >= 1000) {
+    coin -= 1000;
+    money += 1;
+    updateUI();
+  }
+}
+
+// BONUS
+function dailyBonus() {
+  coin += 500;
+  document.getElementById("bonusMsg").innerText = "🎉 Bonus berildi!";
+  updateUI();
+}
+
+// SHOP
+function buyBoost() {
+  if (coin >= 200) {
+    coin -= 200;
+    tapBoost = 2;
+    updateUI();
+  }
+}
+
+function buyAuto() {
+  if (coin >= 300) {
+    coin -= 300;
+    autoSpeed = 2000;
+
+    clearInterval(autoInterval);
+    autoInterval = setInterval(() => {
+      coin += level * tapBoost;
+      updateUI();
+    }, autoSpeed);
+  }
+}
+
 updateUI();
 </script>
 
