@@ -37,14 +37,14 @@
 <div id="coin">0</div>
 <div id="level">Level: 1</div>
 <button onclick="tap()">🔥 TAP</button>
-<button onclick="upgrade()">⚡ Upgrade (50)</button>
+<button onclick="upgrade()">⚡ Upgrade (<span id="upgradeCost">50</span>)</button>
   <div id="money">Pul: $0</div>
   <button onclick="withdraw()">💸 Withdraw (100 coin)</button>
 <script>
 let coin = parseInt(localStorage.getItem("coin")) || 0;
 let level = parseInt(localStorage.getItem("level")) || 1;
 let money = parseInt(localStorage.getItem("money")) || 0;
-
+let upgradeCost = parseInt(localStorage.getItem("upgradeCost")) || 50;
 updateUI();
 
 // TAP
@@ -63,8 +63,10 @@ setInterval(() => {
 
 // UPGRADE
 function upgrade() {
-  if (coin >= 50) {
-    coin -= 50;
+  if (coin >= upgradeCost) {
+  coin -= upgradeCost;
+  level++;
+  upgradeCost = upgradeCost * 2;
     level++;
     saveData();
     updateUI();
@@ -78,6 +80,7 @@ function updateUI() {
   document.getElementById("coin").innerText = coin;
   document.getElementById("level").innerText = "Level: " + level;
   document.getElementById("money").innerText = "Pul: $" + money;
+  document.getElementById("upgradeCost").innerText = upgradeCost;
 }
 
 // SAVE
@@ -85,6 +88,7 @@ function saveData() {
   localStorage.setItem("coin", coin);
   localStorage.setItem("level", level);
   localStorage.setItem("money", money);
+  localStorage.setItem("upgradeCost", upgradeCost);
 }
 
 function withdraw() {
