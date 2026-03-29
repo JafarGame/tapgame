@@ -106,21 +106,20 @@ function tap(event) {
   }, 50);
 
   setTimeout(() => {
-    coinImg.remove();
-  }, 1000);
+  coinImg.remove();
+}, 1000);
 
-  // 🔥 POP ANIMATION
-  let coinEl = document.getElementById("coin");
-  coinEl.classList.add("pop");
+// 🔥 POP ANIMATION
+let coinEl = document.getElementById("coin");
+coinEl.classList.add("pop");
 
-  setTimeout(() => {
-    coinEl.classList.remove("pop");
-  }, 200);
+setTimeout(() => {
+  coinEl.classList.remove("pop");
+}, 200);
 
-  saveData();
-  updateUI();
+saveData();
+updateUI();
 }
-
   // 🔥 ANIMATION BOSHLANADI
   let coinEl = document.getElementById("coin");
   coinEl.classList.add("pop");
