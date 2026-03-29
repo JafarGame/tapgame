@@ -52,18 +52,12 @@
 <button onclick="upgrade()">⚡ Upgrade (<span id="upgradeCost">50</span>)</button>
 
 <div id="money">Pul: $0</div>
-<div id="offline"></div>
-
-<button onclick="dailyBonus()">🎁 Daily Bonus</button>
-<div id="bonusMsg"></div>
 
 <h2>🛒 Shop</h2>
-<button onclick="buyBoost()">⚡ x2 Tap (200 coin)</button>
-<button onclick="buyAuto()">🤖 Auto Speed (300 coin)</button>
+<button onclick="buyBoost()">⚡ x2 Tap</button>
+<button onclick="buyAuto()">🤖 Auto Speed</button>
 
-<div id="shopMsg"></div>
-
-<button onclick="withdraw()">💸 Withdraw (1000 coin)</button>
+<button onclick="withdraw()">💸 Withdraw</button>
 
 <script>
 let coin = 0;
@@ -73,7 +67,6 @@ let upgradeCost = 50;
 let tapBoost = 1;
 let autoSpeed = 5000;
 
-// TAP
 function tap(event) {
   coin += level * 2 * tapBoost;
 
@@ -94,50 +87,38 @@ function tap(event) {
 
   setTimeout(() => coinImg.remove(), 1000);
 
+  let coinEl = document.getElementById("coin");
+  coinEl.classList.add("pop");
+
+  setTimeout(() => {
+    coinEl.classList.remove("pop");
+  }, 200);
+
   updateUI();
 }
 
-// AUTO
 let autoInterval = setInterval(() => {
   coin += level * tapBoost;
   updateUI();
 }, autoSpeed);
 
-// UPGRADE
 function upgrade() {
   if (coin >= upgradeCost) {
     coin -= upgradeCost;
     level++;
-    upgradeCost = Math.floor(upgradeCost * 1.5);
+    upgradeCost *= 1.5;
     updateUI();
   }
 }
 
-// UI
-function updateUI() {
-  document.getElementById("coin").innerText = coin;
-  document.getElementById("level").innerText = "Level: " + level;
-  document.getElementById("money").innerText = "Pul: $" + money;
-  document.getElementById("upgradeCost").innerText = upgradeCost;
-}
-
-// WITHDRAW
 function withdraw() {
   if (coin >= 1000) {
     coin -= 1000;
-    money += 1;
+    money++;
     updateUI();
   }
 }
 
-// BONUS
-function dailyBonus() {
-  coin += 500;
-  document.getElementById("bonusMsg").innerText = "🎉 Bonus berildi!";
-  updateUI();
-}
-
-// SHOP
 function buyBoost() {
   if (coin >= 200) {
     coin -= 200;
@@ -159,334 +140,11 @@ function buyAuto() {
   }
 }
 
-updateUI();
-</script>
-
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-  <title>Tap Coin Game</title>
-
-  <style>
-    @keyframes pop {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.3); }
-      100% { transform: scale(1); }
-    }
-
-    .pop {
-      animation: pop 0.2s ease;
-    }
-
-    button:active {
-      transform: scale(0.9);
-    }
-
-    body {
-      text-align: center;
-      font-family: sans-serif;
-      background: #0f172a;
-      color: white;
-    }
-
-    #coin {
-      font-size: 40px;
-      margin: 20px;
-    }
-
-    button {
-      margin: 5px;
-      padding: 10px 20px;
-      border-radius: 10px;
-      border: none;
-      background: orange;
-      color: white;
-    }
-  </style>
-</head>
-
-<body>
-
-<h1>💰 Tap Coin Game</h1>
-
-<div id="coin">0</div>
-<div id="level">Level: 1</div>
-
-<button onclick="tap(event)">🔥 TAP</button>
-<button onclick="upgrade()">⚡ Upgrade (<span id="upgradeCost">50</span>)</button>
-
-<div id="money">Pul: $0</div>
-<div id="offline"></div>
-
-<button onclick="dailyBonus()">🎁 Daily Bonus</button>
-<div id="bonusMsg"></div>
-
-<h2>🛒 Shop</h2>
-<button onclick="buyBoost()">⚡ x2 Tap (200 coin)</button>
-<button onclick="buyAuto()">🤖 Auto Speed (300 coin)</button>
-
-<div id="shopMsg"></div>
-
-<button onclick="withdraw()">💸 Withdraw (1000 coin)</button>
-
-<script>
-let coin = 0;
-let level = 1;
-let money = 0;
-let upgradeCost = 50;
-let tapBoost = 1;
-let autoSpeed = 5000;
-
-// TAP
-function tap(event) {
-  coin += level * 2 * tapBoost;
-
-  let coinImg = document.createElement("img");
-  coinImg.src = "https://cdn-icons-png.flaticon.com/512/138/138292.png";
-
-  coinImg.style.position = "absolute";
-  coinImg.style.left = event.clientX + "px";
-  coinImg.style.top = event.clientY + "px";
-  coinImg.style.width = "30px";
-
-  document.body.appendChild(coinImg);
-
-  setTimeout(() => {
-    coinImg.style.top = (event.clientY - 80) + "px";
-    coinImg.style.opacity = "0";
-  }, 50);
-
-  setTimeout(() => coinImg.remove(), 1000);
-
-  updateUI();
-}
-
-// AUTO
-let autoInterval = setInterval(() => {
-  coin += level * tapBoost;
-  updateUI();
-}, autoSpeed);
-
-// UPGRADE
-function upgrade() {
-  if (coin >= upgradeCost) {
-    coin -= upgradeCost;
-    level++;
-    upgradeCost = Math.floor(upgradeCost * 1.5);
-    updateUI();
-  }
-}
-
-// UI
 function updateUI() {
   document.getElementById("coin").innerText = coin;
   document.getElementById("level").innerText = "Level: " + level;
   document.getElementById("money").innerText = "Pul: $" + money;
-  document.getElementById("upgradeCost").innerText = upgradeCost;
-}
-
-// WITHDRAW
-function withdraw() {
-  if (coin >= 1000) {
-    coin -= 1000;
-    money += 1;
-    updateUI();
-  }
-}
-
-// BONUS
-function dailyBonus() {
-  coin += 500;
-  document.getElementById("bonusMsg").innerText = "🎉 Bonus berildi!";
-  updateUI();
-}
-
-// SHOP
-function buyBoost() {
-  if (coin >= 200) {
-    coin -= 200;
-    tapBoost = 2;
-    updateUI();
-  }
-}
-
-function buyAuto() {
-  if (coin >= 300) {
-    coin -= 300;
-    autoSpeed = 2000;
-
-    clearInterval(autoInterval);
-    autoInterval = setInterval(() => {
-      coin += level * tapBoost;
-      updateUI();
-    }, autoSpeed);
-  }
-}
-
-updateUI();
-</script>
-
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-  <title>Tap Coin Game</title>
-
-  <style>
-    @keyframes pop {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.3); }
-      100% { transform: scale(1); }
-    }
-
-    .pop {
-      animation: pop 0.2s ease;
-    }
-
-    button:active {
-      transform: scale(0.9);
-    }
-
-    body {
-      text-align: center;
-      font-family: sans-serif;
-      background: #0f172a;
-      color: white;
-    }
-
-    #coin {
-      font-size: 40px;
-      margin: 20px;
-    }
-
-    button {
-      margin: 5px;
-      padding: 10px 20px;
-      border-radius: 10px;
-      border: none;
-      background: orange;
-      color: white;
-    }
-  </style>
-</head>
-
-<body>
-
-<h1>💰 Tap Coin Game</h1>
-
-<div id="coin">0</div>
-<div id="level">Level: 1</div>
-
-<button onclick="tap(event)">🔥 TAP</button>
-<button onclick="upgrade()">⚡ Upgrade (<span id="upgradeCost">50</span>)</button>
-
-<div id="money">Pul: $0</div>
-<div id="offline"></div>
-
-<button onclick="dailyBonus()">🎁 Daily Bonus</button>
-<div id="bonusMsg"></div>
-
-<h2>🛒 Shop</h2>
-<button onclick="buyBoost()">⚡ x2 Tap (200 coin)</button>
-<button onclick="buyAuto()">🤖 Auto Speed (300 coin)</button>
-
-<div id="shopMsg"></div>
-
-<button onclick="withdraw()">💸 Withdraw (1000 coin)</button>
-
-<script>
-let coin = 0;
-let level = 1;
-let money = 0;
-let upgradeCost = 50;
-let tapBoost = 1;
-let autoSpeed = 5000;
-
-// TAP
-function tap(event) {
-  coin += level * 2 * tapBoost;
-
-  let coinImg = document.createElement("img");
-  coinImg.src = "https://cdn-icons-png.flaticon.com/512/138/138292.png";
-
-  coinImg.style.position = "absolute";
-  coinImg.style.left = event.clientX + "px";
-  coinImg.style.top = event.clientY + "px";
-  coinImg.style.width = "30px";
-
-  document.body.appendChild(coinImg);
-
-  setTimeout(() => {
-    coinImg.style.top = (event.clientY - 80) + "px";
-    coinImg.style.opacity = "0";
-  }, 50);
-
-  setTimeout(() => coinImg.remove(), 1000);
-
-  updateUI();
-}
-
-// AUTO
-let autoInterval = setInterval(() => {
-  coin += level * tapBoost;
-  updateUI();
-}, autoSpeed);
-
-// UPGRADE
-function upgrade() {
-  if (coin >= upgradeCost) {
-    coin -= upgradeCost;
-    level++;
-    upgradeCost = Math.floor(upgradeCost * 1.5);
-    updateUI();
-  }
-}
-
-// UI
-function updateUI() {
-  document.getElementById("coin").innerText = coin;
-  document.getElementById("level").innerText = "Level: " + level;
-  document.getElementById("money").innerText = "Pul: $" + money;
-  document.getElementById("upgradeCost").innerText = upgradeCost;
-}
-
-// WITHDRAW
-function withdraw() {
-  if (coin >= 1000) {
-    coin -= 1000;
-    money += 1;
-    updateUI();
-  }
-}
-
-// BONUS
-function dailyBonus() {
-  coin += 500;
-  document.getElementById("bonusMsg").innerText = "🎉 Bonus berildi!";
-  updateUI();
-}
-
-// SHOP
-function buyBoost() {
-  if (coin >= 200) {
-    coin -= 200;
-    tapBoost = 2;
-    updateUI();
-  }
-}
-
-function buyAuto() {
-  if (coin >= 300) {
-    coin -= 300;
-    autoSpeed = 2000;
-
-    clearInterval(autoInterval);
-    autoInterval = setInterval(() => {
-      coin += level * tapBoost;
-      updateUI();
-    }, autoSpeed);
-  }
+  document.getElementById("upgradeCost").innerText = Math.floor(upgradeCost);
 }
 
 updateUI();
