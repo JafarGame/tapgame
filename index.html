@@ -100,15 +100,13 @@ function tap(event) {
   document.body.appendChild(coinImg);
 
   setTimeout(() => {
-    coinImg.style.top = (event.clientY - 80) + "px";
-    coinImg.style.opacity = "0";
-    coinImg.style.transform = "scale(1.5) rotate(360deg)";
-  }, 50);
-
+  coinImg.style.top = (event.clientY - 80) + "px";
+  coinImg.style.opacity = "0";
+  coinImg.style.transform = "scale(1.5) rotate(360deg)";
+}, 50);
   setTimeout(() => {
   coinImg.remove();
 }, 1000);
-
 // 🔥 POP ANIMATION
 let coinEl = document.getElementById("coin");
 coinEl.classList.add("pop");
