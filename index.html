@@ -39,12 +39,26 @@
 <button onclick="tap()">🔥 TAP</button>
 <button onclick="upgrade()">⚡ Upgrade (<span id="upgradeCost">50</span>)</button>
   <div id="money">Pul: $0</div>
+  <div id="offline"></div>
+  <button onclick="dailyBonus()">🎁 Daily Bonus</button>
+<div id="bonusMsg"></div>
   <button onclick="withdraw()">💸 Withdraw (1000 coin)</button>
 <script>
 let coin = parseInt(localStorage.getItem("coin")) || 0;
 let level = parseInt(localStorage.getItem("level")) || 1;
 let money = parseInt(localStorage.getItem("money")) || 0;
 let upgradeCost = parseInt(localStorage.getItem("upgradeCost")) || 50;
+let lastTime = parseInt(localStorage.getItem("lastTime")) || Date.now();
+  let lastBonus = parseInt(localStorage.getItem("lastBonus")) || 0;
+  let now = Date.now();
+let diff = Math.floor((now - lastTime) / 1000);
+
+let earned = Math.floor(diff / 5) * level;
+
+// 🔥 LIMIT (MAX 10000 coin)
+earned = Math.min(earned, 10000);
+
+coin += earned;
 updateUI();
 
 // TAP
@@ -81,6 +95,11 @@ function updateUI() {
   document.getElementById("level").innerText = "Level: " + level;
   document.getElementById("money").innerText = "Pul: $" + money;
   document.getElementById("upgradeCost").innerText = upgradeCost;
+
+  if (earned > 0) {
+    document.getElementById("offline").innerText =
+      "Offline: +" + earned + " coin";
+  }
 }
 
 // SAVE
@@ -89,18 +108,44 @@ function saveData() {
   localStorage.setItem("level", level);
   localStorage.setItem("money", money);
   localStorage.setItem("upgradeCost", upgradeCost);
+  localStorage.setItem("lastTime", Date.now());
 }
-
 function withdraw() {
   if (coin >= 1000) {
-  coin -= 1000;
+    coin -= 1000;
     money += 1;
     saveData();
     updateUI();
   } else {
     alert("Coin yetarli emas!");
   }
-} 
+}
+
+// 🔥 SHU YERGA QO‘SHASAN (119-qatordan keyin)
+function dailyBonus() {
+  let now = Date.now();
+  let diff = now - lastBonus;
+
+  if (diff >= 86400000) {
+    let bonus = 500 * level;
+
+    coin += bonus;
+    lastBonus = now;
+
+    localStorage.setItem("lastBonus", lastBonus);
+
+    document.getElementById("bonusMsg").innerText =
+      "🎉 Bonus: +" + bonus + " coin";
+
+    saveData();
+    updateUI();
+  } else {
+    let hours = Math.floor((86400000 - diff) / 3600000);
+
+    document.getElementById("bonusMsg").innerText =
+      "⏳ Yana " + hours + " soat kuting";
+  }
+}
 </script>
 
 </body>
