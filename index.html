@@ -1,21 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My First Game</title>
-</head>
-<body style="text-align:center; font-family:sans-serif;">
+  <title>Tap Coin Game</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: sans-serif;
+      background: #0f172a;
+      color: white;
+    }
 
-<h1>Coin: <span id="coin">0</span></h1>
-<button onclick="tap()" style="font-size:30px;">TAP</button>
+    h1 {
+      margin-top: 30px;
+    }
+
+    #coin {
+      font-size: 40px;
+      margin: 20px;
+    }
+
+    button {
+      font-size: 30px;
+      padding: 15px 30px;
+      border-radius: 15px;
+      border: none;
+      background: orange;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>💰 Tap Coin Game</h1>
+
+<div id="coin">0</div>
+
+<button onclick="tap()">🔥 TAP</button>
 
 <script>
 let coin = 0;
 
-function tap(){
+function tap() {
   coin++;
   document.getElementById("coin").innerText = coin;
 }
 </script>
 
 </body>
-</html>
+                  </html>
