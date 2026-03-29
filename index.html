@@ -47,16 +47,24 @@ level = parseInt(level);
 
 updateUI();
 
+// TAP bosganda
 function tap() {
-  coin += level; // levelga qarab ko‘p coin beradi
+  coin += level;
   saveData();
   updateUI();
 }
 
+// AUTO COIN (har sekund ishlaydi)
+setInterval(() => {
+  coin += level;
+  saveData();
+  updateUI();
+}, 1000);
+
+// UI yangilash
 function updateUI() {
   document.getElementById("coin").innerText = coin;
-  
-  // level hisoblash
+
   if (coin >= 50) {
     level = 3;
   } else if (coin >= 10) {
@@ -68,6 +76,7 @@ function updateUI() {
   document.getElementById("level").innerText = "Level: " + level;
 }
 
+// Saqlash
 function saveData() {
   localStorage.setItem("coin", coin);
   localStorage.setItem("level", level);
