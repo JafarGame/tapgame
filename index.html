@@ -204,7 +204,6 @@ coin += earned;
 function tap(event) {
   coin += level * 2 * tapBoost;
 
-  // coin animation
   let coinImg = document.createElement("img");
   coinImg.src = "https://cdn-icons-png.flaticon.com/512/138/138292.png";
 
@@ -227,7 +226,6 @@ function tap(event) {
     coinImg.remove();
   }, 1000);
 
-  // pop animation
   let coinEl = document.getElementById("coin");
   coinEl.classList.add("pop");
 
@@ -238,23 +236,6 @@ function tap(event) {
   saveData();
   updateUI();
 }
-
-// AUTO COIN
-let autoInterval = setInterval(() => {
-  coin += level * tapBoost;
-  saveData();
-  updateUI();
-}, autoSpeed);
-
-// UPGRADE
-function upgrade() {
-  if (coin >= upgradeCost) {
-    coin -= upgradeCost;
-    level += 1;
-    upgradeCost = Math.floor(upgradeCost * 1.5);
-    saveData();
-    updateUI();
-  } else {
     alert("Coin yetarli emas!");
   }
 }
