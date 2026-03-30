@@ -54,10 +54,9 @@
 <div id="money">Pul: $0</div>
 
 <h2>🛒 Shop</h2>
-<button onclick="buyBoost()">⚡ x2 Tap</button>
-<button onclick="buyAuto()">🤖 Auto Speed</button>
-
-<button onclick="withdraw()">💸 Withdraw</button>
+<button onclick="buyBoost()">⚡ x2 Tap (200)</button>
+<button onclick="buyAuto()">🤖 Auto Speed (300)</button>
+<button onclick="withdraw()">💸 Withdraw (1000)</button>
 
 <script>
 let coin = 0;
@@ -97,10 +96,15 @@ function tap(event) {
   updateUI();
 }
 
+function getAutoCoin() {
+  return Math.floor(level / 10) + 1;
+}
+
 let autoInterval = setInterval(() => {
-  coin += level * tapBoost;
+  coin += getAutoCoin();
+  saveData();
   updateUI();
-}, autoSpeed);
+}, 10000); // 10 sekund
 
 function upgrade() {
   if (coin >= upgradeCost) {
@@ -130,13 +134,20 @@ function buyBoost() {
 function buyAuto() {
   if (coin >= 300) {
     coin -= 300;
-    autoSpeed = 2000;
 
     clearInterval(autoInterval);
+
     autoInterval = setInterval(() => {
-      coin += level * tapBoost;
+      coin += getAutoCoin();
+      saveData();
       updateUI();
-    }, autoSpeed);
+    }, 10000);
+
+    document.getElementById("shopMsg").innerText = "🤖 Auto ishlayapti!";
+    saveData();
+    updateUI();
+  } else {
+    alert("Coin yetarli emas!");
   }
 }
 
