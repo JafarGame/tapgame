@@ -59,12 +59,12 @@
 <button onclick="withdraw()">💸 Withdraw (1000)</button>
 
 <script>
-let coin = 0;
-let level = 1;
-let money = 0;
-let upgradeCost = 50;
-let tapBoost = 1;
-let autoSpeed = 5000;
+let coin = parseInt(localStorage.getItem("coin")) || 0;
+let level = parseInt(localStorage.getItem("level")) || 1;
+let money = parseInt(localStorage.getItem("money")) || 0;
+let upgradeCost = parseInt(localStorage.getItem("upgradeCost")) || 50;
+let tapBoost = parseInt(localStorage.getItem("tapBoost")) || 1;
+let autoSpeed = parseInt(localStorage.getItem("autoSpeed")) || 10000;
 
 function tap(event) {
   coin += level * 2 * tapBoost;
@@ -159,7 +159,14 @@ function updateUI() {
 }
 
 updateUI();
-
+function saveData() {
+  localStorage.setItem("coin", coin);
+  localStorage.setItem("level", level);
+  localStorage.setItem("money", money);
+  localStorage.setItem("upgradeCost", upgradeCost);
+  localStorage.setItem("tapBoost", tapBoost);
+  localStorage.setItem("autoSpeed", autoSpeed);
+}
 // 🔥 SAQLASH (ENG MUHIM)
 window.addEventListener("beforeunload", function () {
   saveData();
