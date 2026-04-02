@@ -46,7 +46,7 @@
 let coin = parseInt(localStorage.getItem("coin")) || 0;
 let level = parseInt(localStorage.getItem("level")) || 1;
 let money = parseInt(localStorage.getItem("money")) || 0;
-let upgradeCost = Math.floor(level * 1000 * 1.2);
+let upgradeCost = level * 1000;
 let doubleTap = false;
 // 🔥 TAP
 function tap(event) {
@@ -88,7 +88,7 @@ function upgrade() {
     coin -= upgradeCost;
     level++;
     // 🔥 YANGI NARX FORMULA
-    upgradeCost = Math.floor(level * 1000 * 1.2);
+    upgradeCost = level * 1000;
     updateUI();
     saveData();
   } else {
