@@ -42,6 +42,15 @@
 <h2>🛒 Shop</h2>
 <button onclick="buyDouble()">💎 Double Tap (500)</button>
 <button onclick="withdraw()">💸 Withdraw (5000)</button>
+<div id="helpModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000000cc;">
+  <div style="background:white; color:black; padding:20px; margin:50px; border-radius:10px; max-height:80%; overflow:auto;">
+    <button onclick="closeHelp()">❌ Yopish</button>
+    <h2>📖 Qo‘llanma</h2>
+    <select onchange="changeLang(this.value)">
+      <option value="uz">O‘zbek</option>
+      <option value="ru">Русский</option>
+      <option value="en">English</option>
+      <option value="tr">Türkçe</option>
 #helpBtn {
   position: absolute;
   top: 10px;
@@ -52,15 +61,6 @@
   background: gold;
   color: black;
 }
-<div id="helpModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000000cc;">
-  <div style="background:white; color:black; padding:20px; margin:50px; border-radius:10px; max-height:80%; overflow:auto;">
-    <button onclick="closeHelp()">❌ Yopish</button>
-    <h2>📖 Qo‘llanma</h2>
-    <select onchange="changeLang(this.value)">
-      <option value="uz">O‘zbek</option>
-      <option value="ru">Русский</option>
-      <option value="en">English</option>
-      <option value="tr">Türkçe</option>
     </select>
     <div id="helpText"></div>
   </div>
