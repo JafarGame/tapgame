@@ -124,7 +124,7 @@ let coinImg = document.createElement("img");
 coinImg.src = "https://cdn-icons-png.flaticon.com/512/138/138292.png";
 coinImg.className = "coinEffect";
 coinImg.style.left = (event.clientX + (Math.random()*30 - 15)) + "px";
-coinImg.style.top = event.clientY + "px";
+coinImg.style.top = (event.clientY + (Math.random()*20 - 10)) + "px";
 document.body.appendChild(coinImg);
 setTimeout(() => coinImg.remove(), 1000);
 // ➕ plus animatsiya
