@@ -29,6 +29,58 @@
       background: orange;
       color: white;
     }
+#helpBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: gold;
+  color: black;
+}
+
+/* 🪙 COIN EFFECT */
+.coinEffect {
+  position: absolute;
+  width: 25px;
+  pointer-events: none;
+  animation: coinFly 1s ease-out forwards;
+}
+
+/* ➕ PLUS EFFECT */
+.plusEffect {
+  position: absolute;
+  color: gold;
+  font-weight: bold;
+  font-size: 18px;
+  pointer-events: none;
+  animation: plusFly 1s ease-out forwards;
+}
+
+/* 🌀 AYLANA + UCHISH */
+@keyframes coinFly {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) rotate(720deg) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* ➕ PLUS ANIMATSIYA */
+@keyframes plusFly {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-80px);
+    opacity: 0;
+  }
+}
   </style>
 </head>
 <body>
@@ -51,37 +103,6 @@
       <option value="ru">Русский</option>
       <option value="en">English</option>
       <option value="tr">Türkçe</option>
-#helpBtn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 20px;
-  padding: 5px 10px;
-  border-radius: 50%;
-  background: gold;
-  color: black;
-}
-.coinEffect {
-  position: absolute;
-  width: 30px;
-  pointer-events: none;
-  animation: flyUp 1s ease-out forwards;
-}
-.plusEffect {
-  position: absolute;
-  color: gold;
-  font-weight: bold;
-  pointer-events: none;
-  animation: fadeUp 1s ease-out forwards;
-}
-@keyframes flyUp {
-  0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(-80px); opacity: 0; }
-}
-@keyframes fadeUp {
-  0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(-60px); opacity: 0; }
-}
     </select>
     <div id="helpText"></div>
   </div>
@@ -102,7 +123,7 @@ function tap(event) {
 let coinImg = document.createElement("img");
 coinImg.src = "https://cdn-icons-png.flaticon.com/512/138/138292.png";
 coinImg.className = "coinEffect";
-coinImg.style.left = event.clientX + "px";
+coinImg.style.left = (event.clientX + (Math.random()*30 - 15)) + "px";
 coinImg.style.top = event.clientY + "px";
 document.body.appendChild(coinImg);
 setTimeout(() => coinImg.remove(), 1000);
