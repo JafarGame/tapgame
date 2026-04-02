@@ -29,17 +29,20 @@
       background: orange;
       color: white;
     }
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
 #helpBtn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 20px;
-  padding: 5px 10px;
+  font-size: 18px;
+  padding: 6px 10px;
   border-radius: 50%;
   background: gold;
   color: black;
 }
-
 /* 🪙 COIN EFFECT */
 .coinEffect {
   position: absolute;
@@ -84,8 +87,10 @@
   </style>
 </head>
 <body>
-<h1>💰 Tap Coin Game</h1>
-<button id="helpBtn" onclick="openHelp()">❓</button>
+<div class="header">
+  <h1>💰 Tap Coin Game</h1>
+  <button id="helpBtn" onclick="openHelp()">❓</button>
+</div>
 <div id="coin">0</div>
 <div id="level">Level: 1</div>
 <button onclick="tap(event)">🔥 TAP</button>
