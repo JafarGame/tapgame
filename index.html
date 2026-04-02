@@ -41,6 +41,7 @@
 <h2>🛒 Shop</h2>
 <button onclick="buyDouble()">💎 Double Tap (500)</button>
 <button onclick="withdraw()">💸 Withdraw (5000)</button>
+<audio id="tapSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3c9f7c0d5d.mp3"></audio>
 <script>
 // 🔥 LOAD DATA
 let coin = parseInt(localStorage.getItem("coin")) || 0;
@@ -53,10 +54,11 @@ function tap(event) {
   let tapCoin = Math.floor((level - 1) / 10) + 1;
   if (doubleTap) tapCoin *= 2;
   coin += tapCoin;
+document.getElementById("tapSound").play().catch(()=>{});
   let sound = document.getElementById("tapSound");
 if (sound) {
   sound.currentTime = 0;
-  sound.volume = 0.3;
+  sound.volume = 0.5;
   sound.play().catch(() => {});
 }
   let coinImg = document.createElement("img");
@@ -142,7 +144,6 @@ function saveData() {
 }
 // 🔥 START
 updateUI();
-</script>
-  <audio id="tapSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3c9f7c0d5d.mp3"></audio>
+</script>
 </body>
 </html>
