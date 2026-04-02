@@ -10,6 +10,7 @@
     }
     .pop {
       animation: pop 0.2s ease;
+      <audio id="tapSound" src="https://www.soundjay.com/misc/sounds/coin-drop-1.mp3"></audio>
     }
     body {
       text-align: center;
@@ -53,6 +54,9 @@ function tap(event) {
   let tapCoin = Math.floor((level - 1) / 10) + 1;
   if (doubleTap) tapCoin *= 2;
   coin += tapCoin;
+  let sound = document.getElementById("tapSound");
+sound.currentTime = 0;
+sound.play();
   let coinImg = document.createElement("img");
   coinImg.src = "https://cdn-icons-png.flaticon.com/512/138/138292.png";
   coinImg.style.position = "absolute";
