@@ -14,10 +14,6 @@
       animation: pop 0.2s ease;
     }
 
-    button:active {
-      transform: scale(0.9);
-    }
-
     body {
       text-align: center;
       font-family: sans-serif;
@@ -54,20 +50,27 @@
 <div id="money">Pul: $0</div>
 
 <h2>🛒 Shop</h2>
-<button onclick="buyBoost()">⚡ x2 Tap (200)</button>
-<button onclick="buyAuto()">🤖 Auto Speed (300)</button>
-<button onclick="withdraw()">💸 Withdraw (1000)</button>
+<button onclick="buyDouble()">💎 Double Tap (500)</button>
+<button onclick="withdraw()">💸 Withdraw (5000)</button>
 
 <script>
+
+// 🔥 LOAD DATA
 let coin = parseInt(localStorage.getItem("coin")) || 0;
 let level = parseInt(localStorage.getItem("level")) || 1;
 let money = parseInt(localStorage.getItem("money")) || 0;
 let upgradeCost = parseInt(localStorage.getItem("upgradeCost")) || 50;
-let tapBoost = parseInt(localStorage.getItem("tapBoost")) || 1;
-let autoSpeed = parseInt(localStorage.getItem("autoSpeed")) || 10000;
 
+let doubleTap = false;
+
+// 🔥 TAP
 function tap(event) {
-  coin += level * 2 * tapBoost;
+
+  let tapCoin = Math.floor((level - 1) / 10) + 1;
+
+  if (doubleTap) tapCoin *= 2;
+
+  coin += tapCoin;
 
   let coinImg = document.createElement("img");
   coinImg.src = "https://cdn-icons-png.flaticon.com/512/138/138292.png";
@@ -94,83 +97,83 @@ function tap(event) {
   }, 200);
 
   updateUI();
+  saveData(); // 🔥 ENG MUHIM
 }
 
+// 🔥 AUTO COIN (10 sekund)
 function getAutoCoin() {
-  return Math.floor(level / 10) + 1;
+  return Math.floor((level - 1) / 50) + 1;
 }
 
-let autoInterval = setInterval(() => {
+setInterval(() => {
   coin += getAutoCoin();
-  saveData();
   updateUI();
-}, 10000); // 10 sekund
+  saveData();
+}, 10000);
 
+// 🔥 UPGRADE
 function upgrade() {
   if (coin >= upgradeCost) {
     coin -= upgradeCost;
     level++;
-    upgradeCost *= 1.5;
+    upgradeCost = Math.floor(upgradeCost * 1.5);
+
     updateUI();
-  }
-}
-
-function withdraw() {
-  if (coin >= 1000) {
-    coin -= 1000;
-    money++;
-    updateUI();
-  }
-}
-
-function buyBoost() {
-  if (coin >= 200) {
-    coin -= 200;
-    tapBoost = 2;
-    updateUI();
-  }
-}
-
-function buyAuto() {
-  if (coin >= 300) {
-    coin -= 300;
-
-    clearInterval(autoInterval);
-
-    autoInterval = setInterval(() => {
-      coin += getAutoCoin();
-      saveData();
-      updateUI();
-    }, 10000);
-
-    document.getElementById("shopMsg").innerText = "🤖 Auto ishlayapti!";
     saveData();
-    updateUI();
   } else {
     alert("Coin yetarli emas!");
   }
 }
 
+// 💰 WITHDRAW
+function withdraw() {
+  if (coin >= 5000) {
+    coin -= 5000;
+    money += 1;
+
+    updateUI();
+    saveData();
+  } else {
+    alert("5000 coin kerak!");
+  }
+}
+
+// 💎 DOUBLE TAP (10 sekund)
+function buyDouble() {
+  if (coin >= 500) {
+    coin -= 500;
+    doubleTap = true;
+
+    setTimeout(() => {
+      doubleTap = false;
+    }, 10000);
+
+    updateUI();
+    saveData();
+  } else {
+    alert("Coin yetarli emas!");
+  }
+}
+
+// 🔄 UI
 function updateUI() {
   document.getElementById("coin").innerText = coin;
   document.getElementById("level").innerText = "Level: " + level;
   document.getElementById("money").innerText = "Pul: $" + money;
-  document.getElementById("upgradeCost").innerText = Math.floor(upgradeCost);
+  document.getElementById("upgradeCost").innerText = upgradeCost;
 }
 
-updateUI();
+// 💾 SAVE
 function saveData() {
   localStorage.setItem("coin", coin);
   localStorage.setItem("level", level);
   localStorage.setItem("money", money);
   localStorage.setItem("upgradeCost", upgradeCost);
-  localStorage.setItem("tapBoost", tapBoost);
-  localStorage.setItem("autoSpeed", autoSpeed);
 }
-// 🔥 SAQLASH (ENG MUHIM)
-window.addEventListener("beforeunload", function () {
-  saveData();
-});
+
+// 🔥 START
+updateUI();
+
 </script>
 
 </body>
