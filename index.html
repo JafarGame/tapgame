@@ -2,30 +2,25 @@
 <html>
 <head>
   <title>Tap Coin Game</title>
-
   <style>
     @keyframes pop {
       0% { transform: scale(1); }
       50% { transform: scale(1.3); }
       100% { transform: scale(1); }
     }
-
     .pop {
       animation: pop 0.2s ease;
     }
-
     body {
       text-align: center;
       font-family: sans-serif;
       background: #0f172a;
       color: white;
     }
-
     #coin {
       font-size: 40px;
       margin: 20px;
     }
-
     button {
       margin: 5px;
       padding: 10px 20px;
@@ -36,108 +31,80 @@
     }
   </style>
 </head>
-
 <body>
-
 <h1>💰 Tap Coin Game</h1>
-
 <div id="coin">0</div>
 <div id="level">Level: 1</div>
-
 <button onclick="tap(event)">🔥 TAP</button>
 <button onclick="upgrade()">⚡ Upgrade (<span id="upgradeCost">50</span>)</button>
-
 <div id="money">Pul: $0</div>
-
 <h2>🛒 Shop</h2>
 <button onclick="buyDouble()">💎 Double Tap (500)</button>
 <button onclick="withdraw()">💸 Withdraw (5000)</button>
-
 <script>
-
 // 🔥 LOAD DATA
 let coin = parseInt(localStorage.getItem("coin")) || 0;
 let level = parseInt(localStorage.getItem("level")) || 1;
 let money = parseInt(localStorage.getItem("money")) || 0;
 let upgradeCost = parseInt(localStorage.getItem("upgradeCost")) || 50;
-
 let doubleTap = false;
-
 // 🔥 TAP
 function tap(event) {
-
   let tapCoin = Math.floor((level - 1) / 10) + 1;
-
   if (doubleTap) tapCoin *= 2;
-
   coin += tapCoin;
-
   let coinImg = document.createElement("img");
   coinImg.src = "https://cdn-icons-png.flaticon.com/512/138/138292.png";
-
   coinImg.style.position = "absolute";
   coinImg.style.left = event.clientX + "px";
   coinImg.style.top = event.clientY + "px";
   coinImg.style.width = "30px";
-
   document.body.appendChild(coinImg);
-
   setTimeout(() => {
     coinImg.style.top = (event.clientY - 80) + "px";
     coinImg.style.opacity = "0";
   }, 50);
-
   setTimeout(() => coinImg.remove(), 1000);
-
   let coinEl = document.getElementById("coin");
   coinEl.classList.add("pop");
-
   setTimeout(() => {
     coinEl.classList.remove("pop");
   }, 200);
-
   updateUI();
   saveData(); // 🔥 ENG MUHIM
 }
-
 // 🔥 AUTO COIN (10 sekund)
 function getAutoCoin() {
   return Math.floor((level - 1) / 50) + 1;
 }
-
 setInterval(() => {
   coin += getAutoCoin();
   updateUI();
   saveData();
 }, 10000);
-
 // 🔥 UPGRADE
 function upgrade() {
   if (coin >= upgradeCost) {
     coin -= upgradeCost;
     level++;
     upgradeCost = Math.floor(upgradeCost * 1.5);
-
     updateUI();
     saveData();
   } else {
     alert("Coin yetarli emas!");
   }
 }
-
 // 💰 WITHDRAW
 function withdraw() {
   if (coin >= 5000) {
     coin -= 5000;
     money += 1;
-
     updateUI();
     saveData();
   } else {
     alert("5000 coin kerak!");
   }
 }
-
 // 💎 DOUBLE TAP (10 sekund)
 function buyDouble() {
   if (coin >= 500) {
@@ -147,14 +114,12 @@ function buyDouble() {
     setTimeout(() => {
       doubleTap = false;
     }, 10000);
-
     updateUI();
     saveData();
   } else {
     alert("Coin yetarli emas!");
   }
 }
-
 // 🔄 UI
 function updateUI() {
   document.getElementById("coin").innerText = coin;
@@ -162,7 +127,6 @@ function updateUI() {
   document.getElementById("money").innerText = "Pul: $" + money;
   document.getElementById("upgradeCost").innerText = upgradeCost;
 }
-
 // 💾 SAVE
 function saveData() {
   localStorage.setItem("coin", coin);
@@ -170,11 +134,8 @@ function saveData() {
   localStorage.setItem("money", money);
   localStorage.setItem("upgradeCost", upgradeCost);
 }
-
 // 🔥 START
 updateUI();
-
 </script>
-
 </body>
 </html>
