@@ -61,6 +61,27 @@
   background: gold;
   color: black;
 }
+.coinEffect {
+  position: absolute;
+  width: 30px;
+  pointer-events: none;
+  animation: flyUp 1s ease-out forwards;
+}
+.plusEffect {
+  position: absolute;
+  color: gold;
+  font-weight: bold;
+  pointer-events: none;
+  animation: fadeUp 1s ease-out forwards;
+}
+@keyframes flyUp {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-80px); opacity: 0; }
+}
+@keyframes fadeUp {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-60px); opacity: 0; }
+}
     </select>
     <div id="helpText"></div>
   </div>
@@ -77,18 +98,22 @@ function tap(event) {
   let tapCoin = Math.floor((level - 1) / 10) + 1;
   if (doubleTap) tapCoin *= 2;
   coin += tapCoin;
-  let coinImg = document.createElement("img");
-  coinImg.src = "https://cdn-icons-png.flaticon.com/512/138/138292.png";
-  coinImg.style.position = "absolute";
-  coinImg.style.left = event.clientX + "px";
-  coinImg.style.top = event.clientY + "px";
-  coinImg.style.width = "30px";
-  document.body.appendChild(coinImg);
-  setTimeout(() => {
-    coinImg.style.top = (event.clientY - 80) + "px";
-    coinImg.style.opacity = "0";
-  }, 50);
-  setTimeout(() => coinImg.remove(), 1000);
+  // 🪙 coin animatsiya
+let coinImg = document.createElement("img");
+coinImg.src = "https://cdn-icons-png.flaticon.com/512/138/138292.png";
+coinImg.className = "coinEffect";
+coinImg.style.left = event.clientX + "px";
+coinImg.style.top = event.clientY + "px";
+document.body.appendChild(coinImg);
+setTimeout(() => coinImg.remove(), 1000);
+// ➕ plus animatsiya
+let plus = document.createElement("div");
+plus.className = "plusEffect";
+plus.innerText = "+" + tapCoin;
+plus.style.left = event.clientX + "px";
+plus.style.top = event.clientY + "px";
+document.body.appendChild(plus);
+setTimeout(() => plus.remove(), 1000);
   let coinEl = document.getElementById("coin");
   coinEl.classList.add("pop");
   setTimeout(() => {
