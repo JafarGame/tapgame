@@ -6,6 +6,7 @@
 <body style="text-align:center; font-family:sans-serif; background:#0f172a; color:white;">
 <h1>🔐 Login</h1>
 <input id="username" placeholder="Login yoz" style="padding:10px; border-radius:10px;"><br><br>
+<input id="password" type="password" placeholder="Parol yoz" style="padding:10px; border-radius:10px;"><br><br>
 <button onclick="login()" style="padding:10px 20px; border-radius:10px;">Kirish</button>
 <script>
 let currentUser = localStorage.getItem("currentUser");
@@ -14,12 +15,27 @@ if (currentUser) {
 }
 function login() {
   let user = document.getElementById("username").value;
-
-  if (user) {
+  let pass = document.getElementById("password").value;
+  if (!user || !pass) {
+    alert("Login va parol kiriting!");
+    return;
+  }
+  let savedPass = localStorage.getItem(user + "_pass");
+  // 🔥 AGAR USER YO‘Q BO‘LSA → RO‘YXATDAN O‘TKAZADI
+  if (!savedPass) {
+    localStorage.setItem(user + "_pass", pass);
     localStorage.setItem("currentUser", user);
+    alert("Yangi account yaratildi!");
     window.location.href = "/index.html";
-  } else {
-    alert("Login kiriting!");
+  } 
+  // 🔐 AGAR BOR BO‘LSA → TEKSHIRADI
+  else {
+    if (savedPass === pass) {
+      localStorage.setItem("currentUser", user);
+      window.location.href = "/index.html";
+    } else {
+      alert("Parol noto‘g‘ri!");
+    }
   }
 }
 </script>
