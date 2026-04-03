@@ -123,7 +123,7 @@
 <script>
 let currentUser = localStorage.getItem("currentUser");
 if (!currentUser) {
-  window.location.href = "login.html";
+  window.location.href = "file:///storage/emulated/0/Download/login.html";
 }
 // 🔥 LOAD DATA
 let coin = parseInt(localStorage.getItem(currentUser + "_coin")) || 0;
