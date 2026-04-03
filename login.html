@@ -5,8 +5,17 @@
 </head>
 <body style="text-align:center; font-family:sans-serif; background:#0f172a; color:white;">
 <h1>🔐 Login</h1>
-<input id="username" placeholder="Login yoz" style="padding:10px; border-radius:10px;"><br><br>
-<input id="password" type="password" placeholder="Parol yoz" style="padding:10px; border-radius:10px;"><br><br>
+  <input id="username" placeholder="Login yoz"
+style="padding:10px; border-radius:10px;"><br><br>
+<div style="position: relative; display: inline-block;">
+  <input id="password" type="password" placeholder="Parol yoz"
+    style="padding:10px; border-radius:10px; padding-right:40px;">
+  <span onclick="togglePassword()" 
+    style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer;">
+    👁
+  </span>
+</div>
+<br><br>
 <button onclick="login()" style="padding:10px 20px; border-radius:10px;">Kirish</button>
 <script>
 let currentUser = localStorage.getItem("currentUser");
@@ -36,6 +45,15 @@ function login() {
     } else {
       alert("Parol noto‘g‘ri!");
     }
+  }
+}
+  function togglePassword() {
+  let passInput = document.getElementById("password");
+
+  if (passInput.type === "password") {
+    passInput.type = "text";
+  } else {
+    passInput.type = "password";
   }
 }
 </script>
