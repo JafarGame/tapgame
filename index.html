@@ -35,7 +35,13 @@
   align-items: center;
   padding: 10px;
 }
-
+.header button {
+  margin-left: 5px;
+}
+#userName {
+  font-size: 14px;
+  color: #94a3b8;
+}
 #helpBtn {
   font-size: 18px;
   padding: 6px 10px;
@@ -89,7 +95,9 @@
 <body>
 <div class="header">
   <h1>💰 Tap Coin Game</h1>
+<span id="userName"></span>
   <button id="helpBtn" onclick="openHelp()">❓</button>
+<button onclick="logout()">🚪</button>
 </div>
 <div id="coin">0</div>
 <div id="level">Level: 1</div>
@@ -113,10 +121,14 @@
   </div>
 </div>
 <script>
+let currentUser = localStorage.getItem("currentUser");
+if (!currentUser) {
+  window.location.href = "login.html";
+}
 // 🔥 LOAD DATA
-let coin = parseInt(localStorage.getItem("coin")) || 0;
-let level = parseInt(localStorage.getItem("level")) || 1;
-let money = parseInt(localStorage.getItem("money")) || 0;
+let coin = parseInt(localStorage.getItem(currentUser + "_coin")) || 0;
+let level = parseInt(localStorage.getItem(currentUser + "_level")) || 1;
+let money = parseInt(localStorage.getItem(currentUser + "_money")) || 0;
 let upgradeCost = level * 1000;
 let doubleTap = false;
 // 🔥 TAP
@@ -204,42 +216,39 @@ function updateUI() {
 }
 // 💾 SAVE
 function saveData() {
-  localStorage.setItem("coin", coin);
-  localStorage.setItem("level", level);
-  localStorage.setItem("money", money);
+  localStorage.setItem(currentUser + "_coin", coin);
+  localStorage.setItem(currentUser + "_level", level);
+  localStorage.setItem(currentUser + "_money", money);
   localStorage.setItem("upgradeCost", upgradeCost);
 }
 // 🔥 START
 updateUI();
+if (currentUser) {
+  document.getElementById("userName").innerText = "👤 " + currentUser;
+}
 function openHelp() {
   document.getElementById("helpModal").style.display = "block";
   changeLang("uz");
 }
-
 function closeHelp() {
   document.getElementById("helpModal").style.display = "none";
 }
 function changeLang(lang) {
   let text = "";
-
   if (lang === "uz") {
     text = `
     <b>🎮 O‘yin haqida:</b><br>
     Siz TAP bosib coin yig‘asiz.<br><br>
-
     <b>📈 Level:</b><br>
     Har level oshganda kuchayadi.<br>
     Level narxi = level × 1000 coin.<br><br>
-
     <b>👆 Tap daromadi:</b><br>
     Har 10 levelda +1 coin qo‘shiladi.<br><br>
-
     <b>⏱ Auto coin:</b><br>
     Har 10 sekundda coin keladi.<br>
     Har 50 levelda auto coin +1 oshadi.
     `;
   }
-
   if (lang === "ru") {
     text = `
     <b>🎮 Об игре:</b><br>
@@ -292,6 +301,10 @@ function changeLang(lang) {
   }
 
   document.getElementById("helpText").innerHTML = text;
+}
+function logout() {
+  localStorage.removeItem("currentUser");
+  window.location.href = "login.html";
 }
 </script>
 </body>
