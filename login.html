@@ -4,24 +4,24 @@
   <title>Login</title>
 </head>
 <body style="text-align:center; font-family:sans-serif; background:#0f172a; color:white;">
-
-<h1>? Login</h1>
-
+<h1>🔐 Login</h1>
 <input id="username" placeholder="Login yoz" style="padding:10px; border-radius:10px;"><br><br>
 <button onclick="login()" style="padding:10px 20px; border-radius:10px;">Kirish</button>
-
 <script>
+let currentUser = localStorage.getItem("currentUser");
+if (currentUser) {
+  window.location.href = "/index.html";
+}
 function login() {
   let user = document.getElementById("username").value;
 
   if (user) {
     localStorage.setItem("currentUser", user);
-    window.location.href = "file:///storage/emulated/0/Download/index.html";
+    window.location.href = "/index.html";
   } else {
     alert("Login kiriting!");
   }
 }
 </script>
-
 </body>
 </html>
