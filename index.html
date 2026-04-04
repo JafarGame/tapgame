@@ -90,23 +90,66 @@
     opacity: 0;
   }
 }
+    .card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(0,255,255,0.2);
+  border-radius: 20px;
+  padding: 20px;
+  margin: 20px;
+  box-shadow: 0 0 20px rgba(0,255,255,0.2);
+}
+
+button {
+  background: linear-gradient(45deg, #00f0ff, #0066ff);
+  border: none;
+  border-radius: 15px;
+  padding: 12px 20px;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 0 15px #00f0ff;
+}
+
+body {
+  background: radial-gradient(circle at top, #020617, #000);
+}
+    .tapBtn {
+  font-size: 20px;
+  padding: 15px 30px;
+  background: linear-gradient(45deg, gold, orange);
+  box-shadow: 0 0 20px gold;
+}
   </style>
 </head>
 <body>
 <div class="header">
-  <h1>💰 Tap Coin Game</h1>
-<span id="userName"></span>
-  <button id="helpBtn" onclick="openHelp()">❓</button>
-<button onclick="logout()">🚪</button>
+  <div style="display:flex; align-items:center; gap:10px;">
+    <img src="LOGO_LINK" width="35">
+    <h2 style="margin:0; color:#00f0ff;">VELTIX</h2>
+  </div>
+
+  <div style="display:flex; align-items:center; gap:10px;">
+    <span id="userName"></span>
+    <button id="helpBtn" onclick="openHelp()">❓</button>
+    <button onclick="logout()">🚪</button>
+  </div>
 </div>
-<div id="coin">0</div>
-<div id="level">Level: 1</div>
-<button onclick="tap(event)">🔥 TAP</button>
+<div class="card">
+  <img src="https://tapgame-two.vercel.app/logo.png" width="70">
+  <h1 id="coin">0</h1>
+  <p>VELTIX (VLX)</p>
+  <div id="level">Level: 1</div>
+</div>
+<button onclick="tap(event)" class="tapBtn">⚡ TAP</button>
 <button onclick="upgrade()">⚡ Upgrade (<span id="upgradeCost">50</span>)</button>
-<div id="money">Money: $0</div>
-<h2>🛒 Shop</h2>
-<button onclick="buyDouble()">💎 Double Tap (500)</button>
-<button onclick="withdraw()">💸 Exchange (5000)</button>
+<div class="card">
+  <h3>💰 Balance</h3>
+  <p id="money">Money: $0</p>
+</div>
+<div class="card">
+  <h2>🛒 VELTIX Shop</h2>
+  <button onclick="buyDouble()">💎 Double Tap</button>
+  <button onclick="withdraw()">💱 Exchange</button>
+</div>
 <div id="helpModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000000cc;">
   <div style="background:white; color:black; padding:20px; margin:50px; border-radius:10px; max-height:80%; overflow:auto;">
     <button onclick="closeHelp()">❌ Yopish</button>
