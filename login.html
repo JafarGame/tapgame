@@ -1,41 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>VELTIX Auth</title>
-  <style>
-    body {
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      height:100vh;
-      background:#020617;
-      color:white;
-      font-family:sans-serif;
-    }
-    .card {
-      padding:30px;
-      border-radius:20px;
-      background:#111;
-      width:300px;
-      text-align:center;
-    }
-    input, button {
-      width:100%;
-      padding:10px;
-      margin:8px 0;
-      border-radius:10px;
-      border:none;
-    }
-    button {
-      background:#00f0ff;
-      color:black;
-      font-weight:bold;
-    }
-  </style>
+<title>VELTIX Auth</title>
+
+<style>
+body {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  background:radial-gradient(circle,#020617,#000);
+  font-family:sans-serif;
+  color:white;
+}
+.card {
+  background:#111;
+  padding:30px;
+  border-radius:20px;
+  width:300px;
+  text-align:center;
+  box-shadow:0 0 20px #00f0ff33;
+}
+.logo {
+  width:90px;
+  border-radius:50%;
+  margin-bottom:10px;
+  box-shadow:0 0 25px gold;
+}
+input,button {
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:10px;
+  border:none;
+}
+button {
+  background:linear-gradient(45deg,#00f0ff,#0066ff);
+  color:white;
+  font-weight:bold;
+}
+</style>
 </head>
+
 <body>
 
 <div class="card">
+  <img src="logoveltix.png" class="logo">
   <h2>VELTIX</h2>
 
   <input id="email" type="email" placeholder="Email">
@@ -51,53 +61,51 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const app = initializeApp({
-  apiKey: "SENING API KEYNI TO‘LIQ QO‘Y!",
+  apiKey: "AIzaSyCU5JdLURDc23XCZPZU49EIc_BdNgllsno",
   authDomain: "veltix-game.firebaseapp.com",
   projectId: "veltix-game"
 });
 
 const auth = getAuth(app);
 
-// 🔐 Auto login
+// auto login
 onAuthStateChanged(auth, (user) => {
   if (user && user.emailVerified) {
     window.location.href = "/index.html";
   }
 });
 
-// 🔑 LOGIN
 window.login = function () {
   let email = val("email");
   let pass = val("password");
 
-  signInWithEmailAndPassword(auth, email, pass)
-    .then(res => {
-      if (!res.user.emailVerified) {
+  signInWithEmailAndPassword(auth,email,pass)
+    .then(res=>{
+      if(!res.user.emailVerified){
         alert("Email tasdiqlanmagan!");
         return;
       }
-      window.location.href = "/index.html";
+      window.location.href="/index.html";
     })
-    .catch(e => alert(e.message));
+    .catch(e=>alert(e.message));
 };
 
-// 🆕 REGISTER
 window.register = function () {
   let email = val("email");
   let pass = val("password");
   let pass2 = val("password2");
 
-  if (pass !== pass2) {
+  if(pass !== pass2){
     alert("Parollar mos emas!");
     return;
   }
 
-  createUserWithEmailAndPassword(auth, email, pass)
-    .then(res => {
+  createUserWithEmailAndPassword(auth,email,pass)
+    .then(res=>{
       sendEmailVerification(res.user);
       alert("Emailga tasdiqlash link yuborildi!");
     })
-    .catch(e => alert(e.message));
+    .catch(e=>alert(e.message));
 };
 
 function val(id){
