@@ -16,12 +16,13 @@
       padding:30px;
       border-radius:20px;
       background:#111;
+      width:300px;
       text-align:center;
     }
     input, button {
       width:100%;
       padding:10px;
-      margin:10px 0;
+      margin:8px 0;
       border-radius:10px;
       border:none;
     }
@@ -39,6 +40,7 @@
 
   <input id="email" type="email" placeholder="Email">
   <input id="password" type="password" placeholder="Password">
+  <input id="password2" type="password" placeholder="Repeat Password">
 
   <button onclick="login()">Login</button>
   <button onclick="register()">Register</button>
@@ -48,13 +50,12 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCU5JdLURDc23XCZPZU49EIc_BdNgllsno",
+const app = initializeApp({
+  apiKey: "SENING API KEYNI TO‘LIQ QO‘Y!",
   authDomain: "veltix-game.firebaseapp.com",
   projectId: "veltix-game"
-};
+});
 
-const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 // 🔐 Auto login
@@ -66,38 +67,41 @@ onAuthStateChanged(auth, (user) => {
 
 // 🔑 LOGIN
 window.login = function () {
-  let email = emailInput();
-  let password = passInput();
+  let email = val("email");
+  let pass = val("password");
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then((cred) => {
-      if (!cred.user.emailVerified) {
+  signInWithEmailAndPassword(auth, email, pass)
+    .then(res => {
+      if (!res.user.emailVerified) {
         alert("Email tasdiqlanmagan!");
         return;
       }
       window.location.href = "/index.html";
     })
-    .catch(err => alert(err.message));
+    .catch(e => alert(e.message));
 };
 
 // 🆕 REGISTER
 window.register = function () {
-  let email = emailInput();
-  let password = passInput();
+  let email = val("email");
+  let pass = val("password");
+  let pass2 = val("password2");
 
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((cred) => {
-      sendEmailVerification(cred.user);
-      alert("Emailga link yuborildi!");
+  if (pass !== pass2) {
+    alert("Parollar mos emas!");
+    return;
+  }
+
+  createUserWithEmailAndPassword(auth, email, pass)
+    .then(res => {
+      sendEmailVerification(res.user);
+      alert("Emailga tasdiqlash link yuborildi!");
     })
-    .catch(err => alert(err.message));
+    .catch(e => alert(e.message));
 };
 
-function emailInput() {
-  return document.getElementById("email").value;
-}
-function passInput() {
-  return document.getElementById("password").value;
+function val(id){
+  return document.getElementById(id).value;
 }
 </script>
 
