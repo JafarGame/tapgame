@@ -93,7 +93,14 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+// 🔐 Agar user allaqachon login bo‘lsa
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    window.location.href = "/index.html";
+  }
+});
 window.login = function () {
   let email = document.getElementById("email").value;
   let password = document.getElementById("password").value;
