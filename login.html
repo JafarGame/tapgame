@@ -103,6 +103,24 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+    .logo {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 15px;
+  box-shadow: 0 0 25px gold;
+}
+
+.miniLogo {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
   </style>
 </head>
 
@@ -112,6 +130,7 @@
   <img src="https://tapgame-two.vercel.app/logo.png" class="spin">
 </div>
   <div class="card">
+    <img src="logoveltix.png" class="logo">
     <img src="https://tapgame-two.vercel.app/logo.png" width="90" class="logo" style="filter: drop-shadow(0 0 15px cyan);">
     <h2>VELTIX</h2>
     <div class="subtitle">Tap & Earn Game</div>
@@ -120,7 +139,8 @@
 
     <div class="passwordBox">
       <input id="password" type="password" placeholder="Password">
-      <span class="eye" onclick="togglePassword()">👁</span>
+  <img src="logoveltix.png" class="miniLogo">
+  <span class="eye" onclick="togglePassword()">👁</span>
     </div>
 
     <button onclick="login()">🚀 Kirish</button>
