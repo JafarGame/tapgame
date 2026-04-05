@@ -198,28 +198,32 @@ const firebaseConfig = {
   projectId: "veltix-game",
   storageBucket: "veltix-game.firebasestorage.app",
   messagingSenderId: "320598350844",
-  appId: "1:320598350844:web:becf1ca122dbe1fe073079",
-  measurementId: "G-9L7DL8VR5P"
+  appId: "1:320598350844:web:becf1ca122dbe1fe073079"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// 🔐 LOGIN CHECK
-onAuthStateChanged(auth, (user) => {
+// 🔥 TIMEOUT (loader qotib qolmasin)
+setTimeout(() => {
+  document.getElementById("loader").style.display = "none";
+}, 3000);
+
+// 🔐 AUTH CHECK
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.href = "/login.html";
-  } 
-  else if (!user.emailVerified) {
-    alert("Email tasdiqlanmagan!");
-    window.location.href = "/login.html";
+    return;
   }
-  else {
-    document.getElementById("userName").innerText = "👤 " + user.email;
-    document.getElementById("loader").style.display = "none";
-    startGame(user.email);
-  }
+
+  // ❗ vaqtincha email verificationni o‘chiramiz
+  // agar ishlasa keyin yana qo‘shamiz
+
+  document.getElementById("userName").innerText = "👤 " + user.email;
+
+  document.getElementById("loader").style.display = "none";
+
+  startGame(user.email);
 });
 
 // 🎮 GAME
@@ -306,7 +310,7 @@ window.logout = function () {
     window.location.href = "/login.html";
   });
 };
-    </script>
+</script>
     <script>
 function openHelp() {
   document.getElementById("helpModal").style.display = "block";
