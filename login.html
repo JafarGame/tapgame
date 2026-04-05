@@ -132,36 +132,34 @@
       window.location.href = "/index.html";
     }
     function login() {
-      let user = document.getElementById("username").value;
-      let pass = document.getElementById("password").value;
-      if (!user || !pass) {
-        alert("Login va parol kiriting!");
-        return;
-      }
-      let savedPass = localStorage.getItem(user + "_pass");
-      if (!savedPass) {
-        localStorage.setItem(user + "_pass", pass);
-        localStorage.setItem("currentUser", user);
-        alert("Account yaratildi!");
-        window.location.href = "/index.html";
-      } else {
-        if (savedPass === pass) {
-          localStorage.setItem("currentUser", user);
-          window.location.href = "/index.html";
-        } else {
-          alert("Parol noto‘g‘ri!");
-        }
-      }
-    }
-    function togglePassword() {
-      let input = document.getElementById("password");
-      input.type = input.type === "password" ? "text" : "password";
-    }
-    window.onload = () => {
+  let user = document.getElementById("username").value;
+  let pass = document.getElementById("password").value;
+
+  if (!user || !pass) {
+    alert("Login va parol kiriting!");
+    return;
+  }
+
+  let savedPass = localStorage.getItem(user + "_pass");
+
+  if (!savedPass) {
+    localStorage.setItem(user + "_pass", pass);
+    localStorage.setItem("currentUser", user);
+  } else if (savedPass !== pass) {
+    alert("Parol noto‘g‘ri!");
+    return;
+  } else {
+    localStorage.setItem("currentUser", user);
+  }
+
+  // 🔥 LOADING EFFECT
+  document.getElementById("loadingScreen").style.display = "flex";
+
   setTimeout(() => {
-    document.getElementById("loader").style.display = "none";
+    window.location.href = "/index.html";
   }, 1500);
-};
+}
+    
   </script>
 </body>
 </html>
