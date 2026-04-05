@@ -207,14 +207,17 @@ const auth = getAuth(app);
 
 // 🔐 LOGIN CHECK
 onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.href = "/login.html";
-  } else {
+  } 
+  else if (!user.emailVerified) {
+    alert("Email tasdiqlanmagan!");
+    window.location.href = "/login.html";
+  }
+  else {
     document.getElementById("userName").innerText = "👤 " + user.email;
-
-    // 🔥 loader o‘chadi
     document.getElementById("loader").style.display = "none";
-
     startGame(user.email);
   }
 });
