@@ -97,30 +97,32 @@ const auth = getAuth(app);
 window.login = function () {
   let email = document.getElementById("email").value;
   let password = document.getElementById("password").value;
-
   if (!email || !password) {
     alert("Email va parol kiriting!");
     return;
   }
-
-  document.getElementById("loading").style.display = "block";
-
   signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
+    .then((userCredential) => {
+      const user = userCredential.user;
+      if (!user.emailVerified) {
+        alert("Email tasdiqlanmagan! Emailingizni tekshiring.");
+        return;
+      }
       window.location.href = "/index.html";
     })
     .catch(() => {
-      // 🔥 agar user yo‘q bo‘lsa — ro‘yxatdan o‘tadi
       createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          window.location.href = "/index.html";
+        .then((userCredential) => {
+          const user = userCredential.user;
+
+          sendEmailVerification(user);
+
+          alert("Emailingizga tasdiqlash link yuborildi! Tekshiring.");
         })
         .catch((error) => {
           alert(error.message);
-          document.getElementById("loading").style.display = "none";
         });
     });
-};
 </script>
 
 </body>
