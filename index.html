@@ -307,7 +307,13 @@ function startGame(user) {
 // 🔓 LOGOUT
 window.logout = function () {
   signOut(auth).then(() => {
+    // 🔥 Tozalaymiz
+    localStorage.clear();
+
+    // 🔥 Majburiy reload
     window.location.href = "/login.html";
+  }).catch((error) => {
+    alert(error.message);
   });
 };
 </script>
