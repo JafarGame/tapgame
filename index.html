@@ -188,11 +188,9 @@ body {
     </select>
     <div id="helpText"></div>
   </div>
-</div>
-<script type="module">
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCU5JdLURDc23XCZPZU49EIc_BdNgllsno",
@@ -214,201 +212,148 @@ onAuthStateChanged(auth, (user) => {
   } else {
     document.getElementById("userName").innerText = "👤 " + user.email;
 
-    // 🔥 LOADER O‘CHADI
+    // 🔥 loader o‘chadi
     document.getElementById("loader").style.display = "none";
+
+    startGame(user.email);
   }
 });
-// 🔥 LOAD DATA
-let coin = parseInt(localStorage.getItem(currentUser + "_coin")) || 0;
-let level = parseInt(localStorage.getItem(currentUser + "_level")) || 1;
-let money = parseInt(localStorage.getItem(currentUser + "_money")) || 0;
-let upgradeCost = level * 1000;
-let doubleTap = false;
-// 🔥 TAP
-function tap(event) {
-  let tapCoin = Math.floor((level - 1) / 10) + 1;
-  if (doubleTap) tapCoin *= 2;
-  coin += tapCoin;
-  // 🪙 coin animatsiya
-let coinImg = document.createElement("img");
-coinImg.src = "https://cdn-icons-png.flaticon.com/512/138/138292.png";
-coinImg.className = "coinEffect";
-coinImg.style.left = (event.clientX + (Math.random()*30 - 15)) + "px";
-coinImg.style.top = (event.clientY + (Math.random()*20 - 10)) + "px";
-document.body.appendChild(coinImg);
-setTimeout(() => coinImg.remove(), 1000);
-// ➕ plus animatsiya
-let plus = document.createElement("div");
-plus.className = "plusEffect";
-plus.innerText = "+" + tapCoin;
-plus.style.left = event.clientX + "px";
-plus.style.top = event.clientY + "px";
-document.body.appendChild(plus);
-setTimeout(() => plus.remove(), 1000);
-  let coinEl = document.getElementById("coin");
-  coinEl.classList.add("pop");
-  setTimeout(() => {
-    coinEl.classList.remove("pop");
-  }, 200);
+
+// 🎮 GAME
+function startGame(user) {
+  let coin = parseInt(localStorage.getItem(user + "_coin")) || 0;
+  let level = parseInt(localStorage.getItem(user + "_level")) || 1;
+  let money = parseInt(localStorage.getItem(user + "_money")) || 0;
+  let upgradeCost = level * 1000;
+  let doubleTap = false;
+
+  function updateUI() {
+    document.getElementById("coin").innerText = coin;
+    document.getElementById("level").innerText = "Level: " + level;
+    document.getElementById("money").innerText = "Money: $" + money;
+    document.getElementById("upgradeCost").innerText = upgradeCost;
+  }
+
+  function saveData() {
+    localStorage.setItem(user + "_coin", coin);
+    localStorage.setItem(user + "_level", level);
+    localStorage.setItem(user + "_money", money);
+  }
+
+  window.tap = function () {
+    let tapCoin = Math.floor((level - 1) / 10) + 1;
+    if (doubleTap) tapCoin *= 2;
+
+    coin += tapCoin;
+    updateUI();
+    saveData();
+  };
+
+  window.upgrade = function () {
+    if (coin >= upgradeCost) {
+      coin -= upgradeCost;
+      level++;
+      upgradeCost = level * 1000;
+      updateUI();
+      saveData();
+    } else {
+      alert("Coin yetarli emas!");
+    }
+  };
+
+  window.withdraw = function () {
+    if (coin >= 5000) {
+      coin -= 5000;
+      money += 1;
+      updateUI();
+      saveData();
+    } else {
+      alert("5000 coin kerak!");
+    }
+  };
+
+  window.buyDouble = function () {
+    if (coin >= 500) {
+      coin -= 500;
+      doubleTap = true;
+
+      setTimeout(() => {
+        doubleTap = false;
+      }, 10000);
+
+      updateUI();
+      saveData();
+    } else {
+      alert("Coin yetarli emas!");
+    }
+  };
+
+  setInterval(() => {
+    coin += Math.floor((level - 1) / 50) + 1;
+    updateUI();
+    saveData();
+  }, 10000);
+
   updateUI();
-  saveData(); // 🔥 ENG MUHIM
 }
-// 🔥 AUTO COIN (10 sekund)
-function getAutoCoin() {
-  return Math.floor((level - 1) / 50) + 1;
-}
-setInterval(() => {
-  coin += getAutoCoin();
-  updateUI();
-  saveData();
-}, 10000);
-// 🔥 UPGRADE
-function upgrade() {
-  if (coin >= upgradeCost) {
-    coin -= upgradeCost;
-    level++;
-    // 🔥 YANGI NARX FORMULA
-    upgradeCost = level * 1000;
-    updateUI();
-    saveData();
-  } else {
-    alert("Coin yetarli emas!");
-  }
-}
-// 💰 WITHDRAW
-function withdraw() {
-  if (coin >= 5000) {
-    coin -= 5000;
-    money += 1;
-    updateUI();
-    saveData();
-  } else {
-    alert("5000 coin kerak!");
-  }
-}
-// 💎 DOUBLE TAP (10 sekund)
-function buyDouble() {
-  if (coin >= 500) {
-    coin -= 500;
-    doubleTap = true;
-    setTimeout(() => {
-      doubleTap = false;
-    }, 10000);
-    updateUI();
-    saveData();
-  } else {
-    alert("Coin yetarli emas!");
-  }
-}
-// 🔄 UI
-function updateUI() {
-  document.getElementById("coin").innerText = coin;
-  document.getElementById("level").innerText = "Level: " + level;
-  document.getElementById("money").innerText = "Money: $" + money;
-  document.getElementById("upgradeCost").innerText = upgradeCost;
-}
-// 💾 SAVE
-function saveData() {
-  localStorage.setItem(currentUser + "_coin", coin);
-  localStorage.setItem(currentUser + "_level", level);
-  localStorage.setItem(currentUser + "_money", money);
-  localStorage.setItem("upgradeCost", upgradeCost);
-}
-// 🔥 START
-updateUI();
-if (currentUser) {
-  document.getElementById("userName").innerText = "👤 " + currentUser;
-}
-function openHelp() {
-  document.getElementById("helpModal").style.display = "block";
-  changeLang("uz");
-}
-function closeHelp() {
-  document.getElementById("helpModal").style.display = "none";
-}
-function changeLang(lang) {
-  let text = "";
-  if (lang === "uz") {
-    text = `
-    <b>🎮 O‘yin haqida:</b><br>
-    Siz TAP bosib coin yig‘asiz.<br><br>
-    <b>📈 Level:</b><br>
-    Har level oshganda kuchayadi.<br>
-    Level narxi = level × 1000 coin.<br><br>
-    <b>👆 Tap daromadi:</b><br>
-    Har 10 levelda +1 coin qo‘shiladi.<br><br>
-    <b>⏱ Auto coin:</b><br>
-    Har 10 sekundda coin keladi.<br>
-    Har 50 levelda auto coin +1 oshadi.
-    `;
-  }
-  if (lang === "ru") {
-    text = `
-    <b>🎮 Об игре:</b><br>
-    Нажимайте TAP и зарабатывайте монеты.<br><br>
 
-    <b>📈 Уровни:</b><br>
-    Цена уровня = уровень × 1000 монет.<br><br>
-
-    <b>👆 Доход за тап:</b><br>
-    Каждые 10 уровней +1 монета.<br><br>
-
-    <b>⏱ Авто доход:</b><br>
-    Каждые 10 секунд даётся монета.<br>
-    Каждые 50 уровней +1.
-    `;
-  }
-
-  if (lang === "en") {
-    text = `
-    <b>🎮 About the game:</b><br>
-    Tap to earn coins.<br><br>
-
-    <b>📈 Levels:</b><br>
-    Upgrade cost = level × 1000 coins.<br><br>
-
-    <b>👆 Tap income:</b><br>
-    Every 10 levels = +1 coin per tap.<br><br>
-
-    <b>⏱ Auto income:</b><br>
-    Every 10 seconds coins are added.<br>
-    Every 50 levels = +1 coin.
-    `;
-  }
-
-  if (lang === "tr") {
-    text = `
-    <b>🎮 Oyun hakkında:</b><br>
-    TAP basarak coin kazan.<br><br>
-
-    <b>📈 Seviye:</b><br>
-    Seviye maliyeti = seviye × 1000 coin.<br><br>
-
-    <b>👆 Tap kazancı:</b><br>
-    Her 10 seviyede +1 coin.<br><br>
-
-    <b>⏱ Otomatik gelir:</b><br>
-    Her 10 saniyede coin gelir.<br>
-    Her 50 seviyede +1 coin.
-    `;
-  }
-
-  document.getElementById("helpText").innerHTML = text;
-}
-function logout() {
+// 🔓 LOGOUT
 window.logout = function () {
   signOut(auth).then(() => {
     window.location.href = "/login.html";
   });
 };
-  window.location.href = "login.html";
+    <script>
+function openHelp() {
+  document.getElementById("helpModal").style.display = "block";
+  changeLang("uz");
 }
-  window.onload = () => {
-  setTimeout(() => {
-    document.getElementById("loader").style.display = "none";
-  }, 1500);
-};
-</script>
 
+function closeHelp() {
+  document.getElementById("helpModal").style.display = "none";
+}
+
+function changeLang(lang) {
+  let text = "";
+
+  if (lang === "uz") {
+    text = `
+    <b>🎮 O‘yin haqida:</b><br>
+    TAP bosib coin yig‘asiz.<br><br>
+
+    <b>📈 Level:</b><br>
+    Level narxi = level × 1000 coin.<br><br>
+
+    <b>👆 Tap:</b><br>
+    Har 10 levelda +1 coin.<br><br>
+
+    <b>⏱ Auto:</b><br>
+    Har 10 sekund coin keladi.
+    `;
+  }
+
+  if (lang === "ru") {
+    text = `
+    <b>🎮 Об игре:</b><br>
+    Нажимай TAP и зарабатывай.<br><br>
+    `;
+  }
+
+  if (lang === "en") {
+    text = `
+    <b>🎮 Game:</b><br>
+    Tap to earn coins.<br><br>
+    `;
+  }
+
+  if (lang === "tr") {
+    text = `
+    <b>🎮 Oyun:</b><br>
+    TAP bas coin kazan.<br><br>
+    `;
+  }
+  document.getElementById("helpText").innerHTML = text;
+}
+</script>
 </body>
 </html>
