@@ -130,8 +130,12 @@ body {
   }
 .spin {
   width: 120px;
-  animation: spin 2s linear infinite;
-  filter: drop-shadow(0 0 30px gold);
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  animation: spin 7s linear infinite;
+  filter: drop-shadow(0 0 40px gold);
+  border: 3px solid rgba(255,215,0,0.3);
 }
 @keyframes spin {
   0% { transform: rotate(0deg); }
