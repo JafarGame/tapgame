@@ -192,128 +192,32 @@ body {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCU5JdLURDc23XCZPZU49EIc_BdNgllsno",
+const app = initializeApp({
+  apiKey: "AIza...",
   authDomain: "veltix-game.firebaseapp.com",
-  projectId: "veltix-game",
-  storageBucket: "veltix-game.firebasestorage.app",
-  messagingSenderId: "320598350844",
-  appId: "1:320598350844:web:becf1ca122dbe1fe073079"
-};
+  projectId: "veltix-game"
+});
 
-const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// 🔥 TIMEOUT (loader qotib qolmasin)
-setTimeout(() => {
-  document.getElementById("loader").style.display = "none";
-}, 3000);
-
-// 🔐 AUTH CHECK
+// 🔐 AUTH
 onAuthStateChanged(auth, (user) => {
-  if (!user) {
+  if (!user || !user.emailVerified) {
     window.location.href = "/login.html";
     return;
   }
 
-  // ❗ vaqtincha email verificationni o‘chiramiz
-  // agar ishlasa keyin yana qo‘shamiz
-
-  document.getElementById("userName").innerText = "👤 " + user.email;
-
   document.getElementById("loader").style.display = "none";
+  document.getElementById("userName").innerText = user.email;
 
   startGame(user.email);
 });
 
-// 🎮 GAME
-function startGame(user) {
-  let coin = parseInt(localStorage.getItem(user + "_coin")) || 0;
-  let level = parseInt(localStorage.getItem(user + "_level")) || 1;
-  let money = parseInt(localStorage.getItem(user + "_money")) || 0;
-  let upgradeCost = level * 1000;
-  let doubleTap = false;
-
-  function updateUI() {
-    document.getElementById("coin").innerText = coin;
-    document.getElementById("level").innerText = "Level: " + level;
-    document.getElementById("money").innerText = "Money: $" + money;
-    document.getElementById("upgradeCost").innerText = upgradeCost;
-  }
-
-  function saveData() {
-    localStorage.setItem(user + "_coin", coin);
-    localStorage.setItem(user + "_level", level);
-    localStorage.setItem(user + "_money", money);
-  }
-
-  window.tap = function () {
-    let tapCoin = Math.floor((level - 1) / 10) + 1;
-    if (doubleTap) tapCoin *= 2;
-
-    coin += tapCoin;
-    updateUI();
-    saveData();
-  };
-
-  window.upgrade = function () {
-    if (coin >= upgradeCost) {
-      coin -= upgradeCost;
-      level++;
-      upgradeCost = level * 1000;
-      updateUI();
-      saveData();
-    } else {
-      alert("Coin yetarli emas!");
-    }
-  };
-
-  window.withdraw = function () {
-    if (coin >= 5000) {
-      coin -= 5000;
-      money += 1;
-      updateUI();
-      saveData();
-    } else {
-      alert("5000 coin kerak!");
-    }
-  };
-
-  window.buyDouble = function () {
-    if (coin >= 500) {
-      coin -= 500;
-      doubleTap = true;
-
-      setTimeout(() => {
-        doubleTap = false;
-      }, 10000);
-
-      updateUI();
-      saveData();
-    } else {
-      alert("Coin yetarli emas!");
-    }
-  };
-
-  setInterval(() => {
-    coin += Math.floor((level - 1) / 50) + 1;
-    updateUI();
-    saveData();
-  }, 10000);
-
-  updateUI();
-}
-
 // 🔓 LOGOUT
 window.logout = function () {
   signOut(auth).then(() => {
-    // 🔥 Tozalaymiz
     localStorage.clear();
-
-    // 🔥 Majburiy reload
     window.location.href = "/login.html";
-  }).catch((error) => {
-    alert(error.message);
   });
 };
 </script>
