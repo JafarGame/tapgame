@@ -144,48 +144,48 @@
   <button onclick="login()">🚀 Kirish</button>
 </div>
 
-<script>
+<script type="module">
 
-  // agar user bor bo‘lsa skip login
-  let currentUser = localStorage.getItem("currentUser");
-  if (currentUser) {
-    window.location.href = "/index.html";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCU5JdLURDc23XCZPZU49EIc_BdNgllsno",
+  authDomain: "veltix-game.firebaseapp.com",
+  projectId: "veltix-game",
+  storageBucket: "veltix-game.firebasestorage.app",
+  messagingSenderId: "320598350844",
+  appId: "1:320598350844:web:becf1ca122dbe1fe073079",
+  measurementId: "G-9L7DL8VR5P"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+window.login = function () {
+  let email = document.getElementById("username").value;
+  let password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    alert("Email va parol kiriting!");
+    return;
   }
 
-  function login() {
-    let user = document.getElementById("username").value;
-    let pass = document.getElementById("password").value;
-
-    if (!user || !pass) {
-      alert("Login va parol kiriting!");
-      return;
-    }
-
-    let savedPass = localStorage.getItem(user + "_pass");
-
-    if (!savedPass) {
-      localStorage.setItem(user + "_pass", pass);
-      localStorage.setItem("currentUser", user);
-    } else if (savedPass !== pass) {
-      alert("Parol noto‘g‘ri!");
-      return;
-    } else {
-      localStorage.setItem("currentUser", user);
-    }
-
-    // 🔥 LOADING
-    document.getElementById("loadingScreen").style.display = "flex";
-
-    setTimeout(() => {
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
       window.location.href = "/index.html";
-    }, 1500);
-  }
-
-  function togglePassword() {
-    let input = document.getElementById("password");
-    input.type = input.type === "password" ? "text" : "password";
-  }
-
+    })
+    .catch(() => {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          window.location.href = "/index.html";
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    });
+};
+</script>
 </script>
 
 </body>
