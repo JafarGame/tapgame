@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>VELTIX Game</title>
+
   <style>
     body {
       text-align:center;
@@ -9,7 +10,12 @@
       background:#020617;
       color:white;
     }
-    #coin { font-size:40px; margin:20px; }
+
+    #coin {
+      font-size:40px;
+      margin:20px;
+    }
+
     button {
       margin:5px;
       padding:10px 20px;
@@ -19,6 +25,7 @@
       color:black;
       font-weight:bold;
     }
+
     #loader {
       position:fixed;
       width:100%;
@@ -27,47 +34,62 @@
       display:flex;
       justify-content:center;
       align-items:center;
+      z-index:999;
     }
+
+    /* 🔥 LOGO */
     .logo {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  margin: 20px auto;
-  display: block;
-  animation: spin 15s linear infinite;
-  box-shadow: 0 0 30px gold, 0 0 60px #00f0ff;
-}
+      width:140px;
+      height:140px;
+      border-radius:50%;
+      margin:20px auto;
+      display:block;
+      animation:spin 10s linear infinite;
+      box-shadow:0 0 30px gold, 0 0 60px #00f0ff;
+    }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-    /* 🪙 coin uchish */
-.coinEffect {
-  position: absolute;
-  width: 30px;
-  pointer-events: none;
-  animation: coinFly 1s ease-out forwards;
-}
+    @keyframes spin {
+      0% { transform:rotate(0deg); }
+      100% { transform:rotate(360deg); }
+    }
 
-/* ➕ +1 */
-.plusEffect {
-  position: absolute;
-  color: gold;
-  font-weight: bold;
-  font-size: 20px;
-  pointer-events: none;
-  animation: plusFly 1s ease-out forwards;
-}
-};
+    /* 🪙 EFFECT */
+    .coinEffect {
+      position:absolute;
+      width:30px;
+      pointer-events:none;
+      animation:coinFly 1s forwards;
+    }
+
+    .plusEffect {
+      position:absolute;
+      color:gold;
+      font-weight:bold;
+      font-size:20px;
+      pointer-events:none;
+      animation:plusFly 1s forwards;
+    }
+
+    @keyframes coinFly {
+      0% { transform:translateY(0) scale(1); opacity:1; }
+      100% { transform:translateY(-120px) scale(0.5); opacity:0; }
+    }
+
+    @keyframes plusFly {
+      0% { transform:translateY(0); opacity:1; }
+      100% { transform:translateY(-80px); opacity:0; }
+    }
+
   </style>
 </head>
+
 <body>
 
 <div id="loader">Loading...</div>
 
 <h2>VELTIX</h2>
-  <img src="logoveltix.png" class="logo">
+<img src="logoveltix.png" class="logo">
+
 <p id="userName"></p>
 
 <div id="coin">0</div>
@@ -78,33 +100,8 @@
 <button onclick="logout()">Logout</button>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.@keyframes coinFly {
-  0% {
-    transform: translateY(0) scale(1) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-120px) scale(0.5) rotate(720deg);
-    opacity: 0;
-  }
-}
-
-/* 🔥 MANA BU ALOHIDA BO‘LADI */
-@keyframes plusFly {
-  0% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-80px);
-    opacity: 0;
-  }
-com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getAuth,
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCU5JdLURDc23XCZPZU49EIc_BdNgllsno",
@@ -115,7 +112,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// 🔐 AUTH CHECK
+// 🔐 LOGIN CHECK
 onAuthStateChanged(auth, (user) => {
   if (!user || !user.emailVerified) {
     window.location.href = "/login.html";
@@ -130,6 +127,7 @@ onAuthStateChanged(auth, (user) => {
 
 // 🎮 GAME
 function startGame(user) {
+
   let coin = parseInt(localStorage.getItem(user+"_coin")) || 0;
   let level = parseInt(localStorage.getItem(user+"_level")) || 1;
 
@@ -138,56 +136,55 @@ function startGame(user) {
     document.getElementById("level").innerText = "Level: " + level;
   }
 
-window.tap = function (event) {
-  let tapCoin = Math.floor((level - 1) / 10) + 1;
-
-  coin += tapCoin;
-  update();
-  save();
-
-  // 🪙 COIN EFFECT
-  let coinImg = document.createElement("img");
-  coinImg.src = "logoveltix.png";
-  coinImg.className = "coinEffect";
-
-  coinImg.style.left = event.clientX + "px";
-  coinImg.style.top = event.clientY + "px";
-
-  document.body.appendChild(coinImg);
-
-  setTimeout(() => coinImg.remove(), 1000);
-
-  // ➕ EFFECT
-  let plus = document.createElement("div");
-  plus.innerText = "+" + tapCoin;
-  plus.className = "plusEffect";
-
-  plus.style.left = event.clientX + "px";
-  plus.style.top = event.clientY + "px";
-
-  document.body.appendChild(plus);
-
-  setTimeout(() => plus.remove(), 1000);
-};
-  window.upgrade = function () {
-    if (coin >= 10) {
-      coin -= 10;
-      level++;
-      save();
-      update();
-    }
-  };
-
   function save() {
     localStorage.setItem(user+"_coin", coin);
     localStorage.setItem(user+"_level", level);
   }
 
+  window.tap = function(event) {
+    let tapCoin = Math.floor((level - 1) / 10) + 1;
+
+    coin += tapCoin;
+    update();
+    save();
+
+    // 🪙 COIN
+    let coinImg = document.createElement("img");
+    coinImg.src = "logoveltix.png";
+    coinImg.className = "coinEffect";
+    coinImg.style.left = event.clientX + "px";
+    coinImg.style.top = event.clientY + "px";
+
+    document.body.appendChild(coinImg);
+    setTimeout(() => coinImg.remove(), 1000);
+
+    // ➕ TEXT
+    let plus = document.createElement("div");
+    plus.innerText = "+" + tapCoin;
+    plus.className = "plusEffect";
+    plus.style.left = event.clientX + "px";
+    plus.style.top = event.clientY + "px";
+
+    document.body.appendChild(plus);
+    setTimeout(() => plus.remove(), 1000);
+  };
+
+  window.upgrade = function() {
+    if (coin >= 10) {
+      coin -= 10;
+      level++;
+      save();
+      update();
+    } else {
+      alert("Coin yetarli emas!");
+    }
+  };
+
   update();
 }
 
-// 🔓 LOGOUT
-window.logout = function () {
+// 🚪 LOGOUT
+window.logout = function() {
   signOut(auth).then(() => {
     window.location.href = "/login.html";
   });
