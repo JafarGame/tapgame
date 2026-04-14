@@ -42,6 +42,45 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+    /* 🪙 coin uchish */
+.coinEffect {
+  position: absolute;
+  width: 30px;
+  pointer-events: none;
+  animation: coinFly 1s ease-out forwards;
+}
+
+/* ➕ +1 */
+.plusEffect {
+  position: absolute;
+  color: gold;
+  font-weight: bold;
+  font-size: 20px;
+  pointer-events: none;
+  animation: plusFly 1s ease-out forwards;
+}
+
+@keyframes coinFly {
+  0% {
+    transform: translateY(0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-120px) scale(0.5) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes plusFly {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-80px);
+    opacity: 0;
+  }
+}
   </style>
 </head>
 <body>
@@ -99,12 +138,38 @@ function startGame(user) {
     document.getElementById("level").innerText = "Level: " + level;
   }
 
-  window.tap = function () {
-    coin++;
-    save();
-    update();
-  };
+  window.tap = function (event) {
+  let tapCoin = Math.floor((level - 1) / 10) + 1;
+  if (doubleTap) tapCoin *= 2;
 
+  coin += tapCoin;
+  updateUI();
+  saveData();
+
+  // 🪙 COIN EFFECT
+  let coinImg = document.createElement("img");
+  coinImg.src = "logoveltix.png";
+  coinImg.className = "coinEffect";
+
+  coinImg.style.left = event.clientX + "px";
+  coinImg.style.top = event.clientY + "px";
+
+  document.body.appendChild(coinImg);
+
+  setTimeout(() => coinImg.remove(), 1000);
+
+  // ➕ +COIN EFFECT
+  let plus = document.createElement("div");
+  plus.innerText = "+" + tapCoin;
+  plus.className = "plusEffect";
+
+  plus.style.left = event.clientX + "px";
+  plus.style.top = event.clientY + "px";
+
+  document.body.appendChild(plus);
+
+  setTimeout(() => plus.remove(), 1000);
+};
   window.upgrade = function () {
     if (coin >= 10) {
       coin -= 10;
