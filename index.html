@@ -53,13 +53,15 @@
       100% { transform:rotate(360deg); }
     }
 
-    /* 🪙 EFFECT */
     .coinEffect {
-      position:absolute;
-      width:30px;
-      pointer-events:none;
-      animation:coinFly 2s forwards;
-    }
+  position:absolute;
+  width:30px;
+  height:30px; /* 🔥 qo‘shamiz */
+  border-radius:50%; /* 🔥 MUHIM */
+  object-fit:cover; /* 🔥 rasmni to‘g‘ri kesadi */
+  pointer-events:none;
+  animation:coinFly 2s forwards;
+}
 
     .plusEffect {
       position:absolute;
