@@ -1,106 +1,306 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VELTIX Game</title>
 
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      text-align:center;
-      font-family:sans-serif;
-      background:#020617;
-      color:white;
+      text-align: center;
+      font-family: 'Segoe UI', sans-serif;
+      background: #020617;
+      color: white;
+      min-height: 100vh;
     }
 
-    #coin {
-      font-size:40px;
-      margin:20px;
-    }
-
-    button {
-      margin:5px;
-      padding:10px 20px;
-      border-radius:10px;
-      border:none;
-      background:#00f0ff;
-      color:black;
-      font-weight:bold;
-    }
-
+    /* ── Loader ── */
     #loader {
-      position:fixed;
-      width:100%;
-      height:100%;
-      background:black;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      z-index:999;
+      position: fixed;
+      inset: 0;
+      background: #020617;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      z-index: 999;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
     }
 
-    /* 🔥 LOGO */
+    #loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-ring {
+      position: relative;
+      width: 90px;
+      height: 90px;
+    }
+
+    .loader-ring::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, #00f0ff, #ffd700, #00f0ff);
+      animation: rotateBorder 1.5s linear infinite;
+    }
+
+    .loader-ring::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, #00f0ff, #ffd700, #00f0ff);
+      animation: rotateBorder 1.5s linear infinite;
+      filter: blur(8px);
+      opacity: 0.5;
+    }
+
+    @keyframes rotateBorder {
+      to { transform: rotate(360deg); }
+    }
+
+    .loader-logo {
+      position: relative;
+      z-index: 1;
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #020617;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .loader-text {
+      font-size: 13px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(0, 240, 255, 0.6);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50%       { opacity: 1; }
+    }
+
+    /* ── Game content ── */
+    #game {
+      padding: 20px 16px 40px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    #game.visible { opacity: 1; }
+
+    /* ── Logo ── */
     .logo {
-      width:140px;
-      height:140px;
-      border-radius:50%;
-      margin:20px auto;
-      display:block;
-      animation:spin 10s linear infinite;
-      box-shadow:0 0 30px gold, 0 0 60px #00f0ff;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      margin: 24px auto 12px;
+      display: block;
+      animation: spin 10s linear infinite;
+      box-shadow: 0 0 30px gold, 0 0 60px #00f0ff;
     }
 
     @keyframes spin {
-      0% { transform:rotate(0deg); }
-      100% { transform:rotate(360deg); }
+      to { transform: rotate(360deg); }
     }
 
+    h2 {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 6px;
+      background: linear-gradient(90deg, #00f0ff, #ffd700, #00f0ff);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 3s linear infinite;
+      margin-bottom: 4px;
+    }
+
+    @keyframes shimmer {
+      to { background-position: 200% center; }
+    }
+
+    #userName {
+      font-size: 12px;
+      color: rgba(0, 240, 255, 0.5);
+      letter-spacing: 1px;
+      margin: 4px 0 20px;
+    }
+
+    /* ── Stats ── */
+    .stats {
+      display: inline-flex;
+      gap: 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(0,240,255,0.12);
+      border-radius: 16px;
+      padding: 16px 32px;
+      margin-bottom: 28px;
+    }
+
+    .stat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+
+    .stat-val {
+      font-size: 32px;
+      font-weight: 800;
+      color: #ffd700;
+      text-shadow: 0 0 12px rgba(255,215,0,0.5);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .stat-divider {
+      width: 1px;
+      background: rgba(0,240,255,0.15);
+      align-self: stretch;
+    }
+
+    /* ── Buttons ── */
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 12px 28px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    button:active { transform: scale(0.96); }
+
+    #tapBtn {
+      background: linear-gradient(135deg, #00c8e0, #00f0ff);
+      color: #020617;
+      font-size: 18px;
+      padding: 16px 40px;
+      border-radius: 50px;
+      box-shadow: 0 0 24px rgba(0,240,255,0.4);
+      letter-spacing: 2px;
+    }
+
+    #tapBtn:hover { box-shadow: 0 0 40px rgba(0,240,255,0.7); transform: scale(1.04); }
+
+    #upgradeBtn {
+      background: rgba(255,215,0,0.1);
+      color: #ffd700;
+      border: 1px solid rgba(255,215,0,0.4);
+      box-shadow: 0 0 12px rgba(255,215,0,0.1);
+    }
+
+    #upgradeBtn:hover { background: rgba(255,215,0,0.18); box-shadow: 0 0 24px rgba(255,215,0,0.3); transform: translateY(-2px); }
+
+    #logoutBtn {
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+      font-size: 12px;
+      padding: 10px 20px;
+    }
+
+    #logoutBtn:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.08); transform: translateY(-1px); }
+
+    /* ── Tap effects ── */
     .coinEffect {
-  position:fixed;
-  width:30px;
-  height:30px; /* 🔥 qo‘shamiz */
-  border-radius:50%; /* 🔥 MUHIM */
-  object-fit:cover; /* 🔥 rasmni to‘g‘ri kesadi */
-  pointer-events:none;
-  animation:coinFly 2s forwards;
-  box-shadow: 0 0 10px gold, 0 0 20px orange;   
-}
+      position: fixed;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      object-fit: cover;
+      pointer-events: none;
+      animation: coinFly 1s forwards;
+      box-shadow: 0 0 10px gold, 0 0 20px orange;
+    }
 
     .plusEffect {
-      position:fixed;
-      color:gold;
-      font-weight:bold;
-      font-size:20px;
-      pointer-events:none;
-      animation:plusFly 2s forwards;
+      position: fixed;
+      color: gold;
+      font-weight: bold;
+      font-size: 20px;
+      pointer-events: none;
+      animation: plusFly 1s forwards;
+      text-shadow: 0 0 8px gold;
     }
 
     @keyframes coinFly {
-      0% { transform:translateY(0) scale(1); opacity:1; }
-      100% { transform:translateY(-120px) scale(0.5); opacity:0; }
+      0%   { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-100px) scale(0.4); opacity: 0; }
     }
 
     @keyframes plusFly {
-      0% { transform:translateY(0); opacity:1; }
-      100% { transform:translateY(-80px); opacity:0; }
+      0%   { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-70px); opacity: 0; }
     }
 
+    /* ── Mobile ── */
+    @media (max-width: 480px) {
+      .logo { width: 110px; height: 110px; }
+      .stat-val { font-size: 26px; }
+      .stats { padding: 14px 20px; gap: 14px; }
+      #tapBtn { padding: 14px 32px; }
+    }
   </style>
 </head>
 
 <body>
 
-<div id="loader">Loading...</div>
+<!-- Loading screen shown while Firebase resolves session -->
+<div id="loader">
+  <div class="loader-ring">
+    <img src="logoveltix.png" class="loader-logo" alt="VELTIX">
+  </div>
+  <div class="loader-text">Loading session…</div>
+</div>
 
-<h2>VELTIX</h2>
-<img src="logoveltix.png" class="logo">
+<!-- Game content, hidden until auth resolves -->
+<div id="game">
+  <h2>VELTIX</h2>
+  <img src="logoveltix.png" class="logo" alt="VELTIX">
+  <p id="userName"></p>
 
-<p id="userName"></p>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-val" id="coin">0</div>
+      <div class="stat-label">Coins</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <div class="stat-val" id="level">1</div>
+      <div class="stat-label">Level</div>
+    </div>
+  </div>
 
-<div id="coin">0</div>
-<div id="level">Level: 1</div>
-
-<button onclick="tap(event)">TAP</button>
-<button onclick="upgrade()">Upgrade</button>
-<button onclick="logout()">Logout</button>
+  <div class="btn-row">
+    <button id="tapBtn" onclick="tap(event)">⚡ TAP</button>
+    <button id="upgradeBtn" onclick="upgrade()">▲ Upgrade</button>
+    <button id="logoutBtn" onclick="logout()">Logout</button>
+  </div>
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -124,10 +324,14 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-  document.getElementById("loader").style.display = "none";
   document.getElementById("userName").innerText = user.email;
-
   await startGame(user);
+
+  // Fade loader out, fade game in
+  const loader = document.getElementById("loader");
+  const game = document.getElementById("game");
+  loader.classList.add("hidden");
+  game.classList.add("visible");
 });
 
 // 🎮 GAME
@@ -151,7 +355,7 @@ async function startGame(user) {
 
   function update() {
     document.getElementById("coin").innerText = coin;
-    document.getElementById("level").innerText = "Level: " + level;
+    document.getElementById("level").innerText = level;
   }
 
   function save() {
@@ -173,7 +377,6 @@ async function startGame(user) {
     coinImg.className = "coinEffect";
     coinImg.style.left = event.clientX + "px";
     coinImg.style.top = event.clientY + "px";
-
     document.body.appendChild(coinImg);
     setTimeout(() => coinImg.remove(), 1000);
 
@@ -183,7 +386,6 @@ async function startGame(user) {
     plus.className = "plusEffect";
     plus.style.left = event.clientX + "px";
     plus.style.top = event.clientY + "px";
-
     document.body.appendChild(plus);
     setTimeout(() => plus.remove(), 1000);
   };
