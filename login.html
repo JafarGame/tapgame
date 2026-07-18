@@ -26,6 +26,7 @@
       margin:10px 0;
       border-radius:10px;
       border:none;
+      box-sizing:border-box;
     }
     button {
       background:#00f0ff;
@@ -39,12 +40,14 @@
 <div class="card">
   <h2>VELTIX</h2>
 
-  <input id="email" type="email" placeholder="Email">
-  <input id="password" type="password" placeholder="Password">
-  <input id="repeat" type="password" placeholder="Repeat Password">
+  <form onsubmit="return false">
+    <input id="email" type="email" placeholder="Email" autocomplete="email">
+    <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+    <input id="repeat" type="password" placeholder="Repeat Password" autocomplete="new-password">
 
-  <button onclick="login()">Login</button>
-  <button onclick="register()">Register</button>
+    <button onclick="login()">Login</button>
+    <button onclick="register()">Register</button>
+  </form>
 </div>
 
 <script type="module">
