@@ -105,6 +105,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCU5JdLURDc23XCZPZU49EIc_BdNgllsno",
@@ -114,9 +115,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 // 🔐 LOGIN CHECK
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   if (!user || !user.emailVerified) {
     window.location.href = "/login.html";
     return;
@@ -125,14 +127,27 @@ onAuthStateChanged(auth, (user) => {
   document.getElementById("loader").style.display = "none";
   document.getElementById("userName").innerText = user.email;
 
-  startGame(user.email);
+  await startGame(user);
 });
 
 // 🎮 GAME
-function startGame(user) {
+async function startGame(user) {
+  const uid = user.uid;
+  const userRef = doc(db, "players", uid);
 
-  let coin = parseInt(localStorage.getItem(user+"_coin")) || 0;
-  let level = parseInt(localStorage.getItem(user+"_level")) || 1;
+  // Load progress from Firestore
+  let coin = 0;
+  let level = 1;
+  try {
+    const snap = await getDoc(userRef);
+    if (snap.exists()) {
+      const data = snap.data();
+      coin = data.coin ?? 0;
+      level = data.level ?? 1;
+    }
+  } catch (e) {
+    console.error("Failed to load progress:", e);
+  }
 
   function update() {
     document.getElementById("coin").innerText = coin;
@@ -140,8 +155,9 @@ function startGame(user) {
   }
 
   function save() {
-    localStorage.setItem(user+"_coin", coin);
-    localStorage.setItem(user+"_level", level);
+    setDoc(userRef, { coin, level }, { merge: true }).catch(e => {
+      console.error("Failed to save progress:", e);
+    });
   }
 
   window.tap = function(event) {
