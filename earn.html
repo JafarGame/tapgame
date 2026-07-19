@@ -1500,14 +1500,9 @@ function spawnClaimFX(amt, x, y) {
 /* ── Nav ────────────────────────────────────────────────────── */
 let toastTimer = null;
 window.navTo = function(tab) {
-  if (tab === "home") { window.location.href = "/dashboard.html"; return; }
-  if (tab === "shop") { window.location.href = "/shop.html"; return; }
-  // Profile → coming soon toast
-  const toast = document.getElementById("toast");
-  toast.textContent = "◆ COMING SOON ◆";
-  toast.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove("show"), 2000);
+  if (tab === "home")    { window.location.href = "/dashboard.html"; return; }
+  if (tab === "shop")    { window.location.href = "/shop.html";      return; }
+  if (tab === "profile") { window.location.href = "/profile.html";   return; }
 };
 
 /* ── Logout ─────────────────────────────────────────────────── */
