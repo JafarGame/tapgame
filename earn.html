@@ -1501,7 +1501,8 @@ function spawnClaimFX(amt, x, y) {
 let toastTimer = null;
 window.navTo = function(tab) {
   if (tab === "home") { window.location.href = "/dashboard.html"; return; }
-  // Shop / profile → coming soon toast
+  if (tab === "shop") { window.location.href = "/shop.html"; return; }
+  // Profile → coming soon toast
   const toast = document.getElementById("toast");
   toast.textContent = "◆ COMING SOON ◆";
   toast.classList.add("show");

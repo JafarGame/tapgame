@@ -1118,7 +1118,7 @@ const auth = getAuth(app);
 const db   = getFirestore(app);
 
 /* ── Constants ─────────────────────────────────────────────── */
-const MAX_ENERGY   = 500;
+const BASE_ENERGY  = 500;
 const REGEN_MS     = 3000;   // +1 energy every 3 s
 const SAVE_DELAY   = 1500;   // debounce Firestore writes
 const SPARK_COLORS = ["#00f0ff","#ffd700","#ffffff","#ff9900","#00ff88","#ff66cc","#00ccff","#ffaa00"];
@@ -1136,7 +1136,8 @@ const RANKS = [
 ];
 
 /* ── State ─────────────────────────────────────────────────── */
-let G = { coin: 0, level: 1, energy: MAX_ENERGY };
+let G = { coin: 0, level: 1, energy: BASE_ENERGY, tapLvl: 0, energyLvl: 0 };
+function getMaxEnergy() { return BASE_ENERGY + G.energyLvl * 100; }
 let userRef   = null;
 let saveTimer = null;
 
@@ -1170,9 +1171,13 @@ async function loadData() {
     const snap = await getDoc(userRef);
     if (snap.exists()) {
       const d = snap.data();
-      G.coin   = d.coin   ?? 0;
-      G.level  = d.level  ?? 1;
-      G.energy = Math.min(d.energy ?? MAX_ENERGY, MAX_ENERGY);
+      G.coin       = d.coin       ?? 0;
+      G.level      = d.level      ?? 1;
+      G.energy     = Math.min(d.energy ?? BASE_ENERGY, getMaxEnergy());
+      G.tapLvl     = d.tapLvl     ?? 0;
+      G.energyLvl  = d.energyLvl  ?? 0;
+      // Re-cap energy now that energyLvl is known
+      G.energy     = Math.min(G.energy, getMaxEnergy());
     }
   } catch (e) { console.warn("Load failed:", e.message); }
 }
@@ -1181,7 +1186,7 @@ function save() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
     if (!userRef) return;
-    setDoc(userRef, { coin: G.coin, level: G.level, energy: G.energy }, { merge: true })
+    setDoc(userRef, { coin: G.coin, level: G.level, energy: G.energy, tapLvl: G.tapLvl, energyLvl: G.energyLvl }, { merge: true })
       .catch(e => console.warn("Save failed:", e.message));
   }, SAVE_DELAY);
 }
@@ -1206,9 +1211,9 @@ function getXpPct(lvl) {
 
 /* ── Render ────────────────────────────────────────────────── */
 function render() {
-  const power = Math.floor((G.level - 1) / 10) + 1;
-  const pct   = Math.round(G.energy / MAX_ENERGY * 100);
-  const low   = G.energy < MAX_ENERGY * 0.25;
+  const power = Math.floor((G.level - 1) / 10) + 1 + G.tapLvl;
+  const pct   = Math.round(G.energy / getMaxEnergy() * 100);
+  const low   = G.energy < getMaxEnergy() * 0.25;
 
   // Header
   document.getElementById("hdrCoins").textContent  = fmtNum(G.coin);
@@ -1223,7 +1228,7 @@ function render() {
 
   // Energy bar + low state
   document.getElementById("eVal").textContent      = G.energy;
-  document.getElementById("eMax").textContent      = MAX_ENERGY;
+  document.getElementById("eMax").textContent      = getMaxEnergy();
   document.getElementById("eBar").style.width      = pct + "%";
   document.getElementById("ePct").textContent      = pct + "%";
   document.getElementById("energyBox").classList.toggle("low", low);
@@ -1248,10 +1253,11 @@ function popEl(id) {
 /* ── Energy regen ──────────────────────────────────────────── */
 function startRegen() {
   setInterval(() => {
-    if (G.energy < MAX_ENERGY) {
-      G.energy = Math.min(G.energy + 1, MAX_ENERGY);
-      const pct = Math.round(G.energy / MAX_ENERGY * 100);
-      const low = G.energy < MAX_ENERGY * 0.25;
+    const maxE = getMaxEnergy();
+    if (G.energy < maxE) {
+      G.energy = Math.min(G.energy + 1, maxE);
+      const pct = Math.round(G.energy / maxE * 100);
+      const low = G.energy < maxE * 0.25;
       document.getElementById("s-energy").textContent = G.energy;
       document.getElementById("eVal").textContent     = G.energy;
       document.getElementById("eBar").style.width     = pct + "%";
@@ -1375,7 +1381,7 @@ window.doTap = function(ev) {
 
   if (G.energy <= 0) { shakeEmpty(x, y); return; }
 
-  const power = Math.floor((G.level - 1) / 10) + 1;
+  const power = Math.floor((G.level - 1) / 10) + 1 + G.tapLvl;
   G.coin  += power;
   G.energy = Math.max(0, G.energy - 1);
 
@@ -1399,6 +1405,7 @@ let toastTimer = null;
 
 window.goTab = function(tab, el) {
   if (tab === "earn") { window.location.href = "/earn.html"; return; }
+  if (tab === "shop") { window.location.href = "/shop.html"; return; }
 
   document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
   el.classList.add("active");
