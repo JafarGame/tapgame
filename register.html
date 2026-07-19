@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>VELTIX — Create Account</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cyan: #00f0ff;
+      --gold: #ffd700;
+      --dark: #020714;
+      --card-bg: rgba(4, 10, 28, 0.92);
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--dark);
+      font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: 24px 0;
+    }
+
+    /* ── BACKGROUND ── */
+    .bg-space {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 100% 60% at 50% -5%,  #07204a 0%, transparent 60%),
+        radial-gradient(ellipse 60%  50% at 95% 100%, #1a0535 0%, transparent 55%),
+        radial-gradient(ellipse 50%  40% at -5% 80%,  #012840 0%, transparent 50%),
+        #020714;
+    }
+    .bg-hex {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      background-image: radial-gradient(circle, rgba(0,240,255,0.14) 1px, transparent 1px);
+      background-size: 36px 36px;
+      mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 20%, transparent 100%);
+      animation: hexScroll 18s linear infinite;
+    }
+    @keyframes hexScroll { to { background-position: 36px 36px; } }
+    .bg-scan {
+      position: fixed; inset: 0; z-index: 2; pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,240,255,0.012) 3px, rgba(0,240,255,0.012) 4px);
+    }
+    .orb { position: fixed; border-radius: 50%; pointer-events: none; z-index: 1; filter: blur(100px); animation: orbDrift 12s ease-in-out infinite alternate; }
+    .orb1 { width: 600px; height: 600px; background: #00cfff; opacity: 0.08; top: -200px; left: -180px; }
+    .orb2 { width: 440px; height: 440px; background: #ffc200; opacity: 0.07; bottom: -150px; right: -150px; animation-delay: -5s; }
+    .orb3 { width: 280px; height: 280px; background: #7000ff; opacity: 0.09; top: 35%; left: 58%; animation-delay: -9s; }
+    @keyframes orbDrift { from { transform: translate(0,0) scale(1); } to { transform: translate(50px,30px) scale(1.15); } }
+    .particles { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+    .p { position: absolute; border-radius: 50%; opacity: 0; animation: floatUp linear infinite; }
+    .p:nth-child(1)  { left: 5%;  width:3px;height:3px; background:var(--gold); animation-duration:10s; animation-delay:0s; }
+    .p:nth-child(2)  { left: 15%; width:2px;height:2px; background:var(--cyan); animation-duration:13s; animation-delay:2.5s; }
+    .p:nth-child(3)  { left: 28%; width:2px;height:2px; background:var(--gold); animation-duration: 8s; animation-delay:5s; }
+    .p:nth-child(4)  { left: 42%; width:2px;height:2px; background:var(--cyan); animation-duration:11s; animation-delay:1s; }
+    .p:nth-child(5)  { left: 58%; width:3px;height:3px; background:var(--gold); animation-duration: 7s; animation-delay:3s; }
+    .p:nth-child(6)  { left: 70%; width:2px;height:2px; background:var(--cyan); animation-duration:14s; animation-delay:0.5s; }
+    .p:nth-child(7)  { left: 82%; width:2px;height:2px; background:var(--gold); animation-duration: 9s; animation-delay:4.5s; }
+    .p:nth-child(8)  { left: 92%; width:2px;height:2px; background:var(--cyan); animation-duration:11s; animation-delay:7s; }
+    @keyframes floatUp {
+      0%   { transform: translateY(108vh); opacity:0; }
+      8%   { opacity:0.8; }
+      92%  { opacity:0.4; }
+      100% { transform: translateY(-8vh) translateX(24px); opacity:0; }
+    }
+
+    /* ── CARD ── */
+    .card-border {
+      position: relative; z-index: 10;
+      width: min(400px, 94vw);
+      padding: 2px; border-radius: 30px;
+      background: conic-gradient(from var(--angle,0deg), #003a5c, #00f0ff, #ffd700, #00f0ff, #003a5c);
+      animation: cardIn 0.9s cubic-bezier(0.22,1,0.36,1) both, borderSpin 4s linear infinite;
+    }
+    @property --angle { syntax:'<angle>'; initial-value:0deg; inherits:false; }
+    @keyframes borderSpin { to { --angle: 360deg; } }
+    @keyframes cardIn {
+      from { opacity:0; transform:translateY(40px) scale(0.94); }
+      to   { opacity:1; transform:translateY(0)    scale(1); }
+    }
+    .card {
+      border-radius: 28px;
+      padding: 44px 38px 38px;
+      background: var(--card-bg);
+      backdrop-filter: blur(32px);
+      box-shadow:
+        0 0 100px rgba(0,240,255,0.06),
+        0 0 40px  rgba(255,215,0,0.04),
+        0 30px 80px rgba(0,0,0,0.8),
+        inset 0 1px 0 rgba(255,255,255,0.06);
+      background-image:
+        linear-gradient(rgba(0,240,255,0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,240,255,0.022) 1px, transparent 1px),
+        linear-gradient(var(--card-bg), var(--card-bg));
+      background-size: 44px 44px, 44px 44px, 100% 100%;
+    }
+    .card::before {
+      content:''; position:absolute; top:0; left:12%; right:12%; height:2px; border-radius:2px;
+      background:linear-gradient(90deg, transparent, var(--cyan) 30%, var(--gold) 70%, transparent);
+      animation:topBarPulse 3s ease-in-out infinite alternate;
+    }
+    @keyframes topBarPulse { 0%{opacity:0.55;filter:blur(0);} 100%{opacity:1;filter:blur(1.5px);} }
+    .corner { position:absolute; width:20px; height:20px; border-color:rgba(0,240,255,0.5); border-style:solid; }
+    .corner-tl { top:14px; left:14px;    border-width:2px 0 0 2px; border-radius:5px 0 0 0; }
+    .corner-tr { top:14px; right:14px;   border-width:2px 2px 0 0; border-radius:0 5px 0 0; }
+    .corner-bl { bottom:14px; left:14px;  border-width:0 0 2px 2px; border-radius:0 0 0 5px; }
+    .corner-br { bottom:14px; right:14px; border-width:0 2px 2px 0; border-radius:0 0 5px 0; }
+
+    /* ── LOGO ── */
+    .logo-wrap { display:flex; flex-direction:column; align-items:center; margin-bottom:24px; }
+    .coin-halo {
+      width:88px; height:88px; position:relative; margin-bottom:14px;
+      filter: drop-shadow(0 0 16px rgba(0,240,255,0.55)) drop-shadow(0 0 32px rgba(255,215,0,0.28));
+      animation: coinFloat 4.5s ease-in-out infinite;
+    }
+    @keyframes coinFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-6px);} }
+    .ring1 {
+      position:absolute; inset:-9px; border-radius:50%;
+      background: conic-gradient(from 0deg, #5a3800 0%, #ffd700 18%, #ffe87a 36%, #ffd700 54%, #8a5800 72%, #ffd700 90%, #5a3800 100%);
+      animation: spinCW 7s linear infinite;
+    }
+    .ring1::after { content:''; position:absolute; inset:5px; border-radius:50%; background:var(--card-bg); }
+    .ring2 {
+      position:absolute; inset:-2px; border-radius:50%;
+      background: conic-gradient(from 0deg, transparent 0deg, #00f0ff 50deg, transparent 100deg, transparent 130deg, #00d4e8 180deg, transparent 230deg, transparent 250deg, #00f0ff 300deg, transparent 350deg);
+      animation: spinCCW 3.5s linear infinite;
+    }
+    .ring2::after { content:''; position:absolute; inset:4px; border-radius:50%; background:var(--card-bg); }
+    .ring3 {
+      position:absolute; inset:4px; border-radius:50%;
+      background: conic-gradient(from 0deg, transparent 0deg, rgba(255,255,255,0.2) 30deg, transparent 60deg, transparent 180deg, rgba(0,240,255,0.18) 210deg, transparent 240deg);
+      animation: spinCW 2s linear infinite;
+    }
+    .logo-img {
+      position:absolute; inset:0; width:100%; height:100%;
+      border-radius:50%; object-fit:cover;
+      border:2px solid rgba(255,215,0,0.35);
+      animation: coinTilt 6s ease-in-out infinite;
+    }
+    @keyframes coinTilt {
+      0%   { transform:perspective(320px) rotateY(0deg)   scale(1); }
+      25%  { transform:perspective(320px) rotateY(14deg)  scale(1.03); }
+      50%  { transform:perspective(320px) rotateY(0deg)   scale(1); }
+      75%  { transform:perspective(320px) rotateY(-14deg) scale(1.03); }
+      100% { transform:perspective(320px) rotateY(0deg)   scale(1); }
+    }
+    @keyframes spinCW  { to { transform:rotate( 360deg); } }
+    @keyframes spinCCW { to { transform:rotate(-360deg); } }
+
+    .logo-title {
+      font-family:'Orbitron',sans-serif;
+      font-size:24px; font-weight:900; letter-spacing:8px; text-transform:uppercase;
+      background:linear-gradient(90deg, var(--gold) 0%, #ffe97a 40%, var(--gold) 70%, var(--cyan) 100%);
+      background-size:260% auto;
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+      animation:shimmer 3s linear infinite; line-height:1;
+    }
+    @keyframes shimmer { to { background-position:260% center; } }
+    .page-title {
+      font-family:'Orbitron',sans-serif;
+      font-size:10px; font-weight:700; letter-spacing:4px; text-transform:uppercase;
+      color:rgba(255,215,0,0.45); margin-top:5px;
+    }
+
+    /* ── FORM ── */
+    form { display:flex; flex-direction:column; gap:10px; }
+    .field-label {
+      font-size:9px; letter-spacing:3px; text-transform:uppercase;
+      color:rgba(0,240,255,0.35); font-family:'Rajdhani',sans-serif;
+      font-weight:700; padding-left:2px; margin-bottom:-2px;
+    }
+    .input-wrap { position:relative; }
+    .input-wrap svg {
+      position:absolute; left:15px; top:50%; transform:translateY(-50%);
+      width:16px; height:16px; opacity:0.3; pointer-events:none;
+      transition:opacity 0.2s, filter 0.2s;
+    }
+    .input-wrap:focus-within svg { opacity:1; filter:drop-shadow(0 0 6px currentColor); }
+    input {
+      width:100%; padding:13px 15px 13px 44px;
+      border-radius:13px; border:1px solid rgba(0,240,255,0.12);
+      background:rgba(0,240,255,0.03); color:#fff;
+      font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:600; letter-spacing:0.5px;
+      outline:none; transition:border-color 0.25s, box-shadow 0.25s, background 0.25s;
+    }
+    input::placeholder { color:rgba(255,255,255,0.22); font-weight:400; }
+    input:focus {
+      border-color:rgba(0,240,255,0.5); background:rgba(0,240,255,0.055);
+      box-shadow:0 0 0 3px rgba(0,240,255,0.09), 0 0 24px rgba(0,240,255,0.09);
+    }
+    input.gold-focus:focus {
+      border-color:rgba(255,215,0,0.45); background:rgba(255,215,0,0.03);
+      box-shadow:0 0 0 3px rgba(255,215,0,0.08), 0 0 24px rgba(255,215,0,0.08);
+    }
+
+    /* section divider */
+    .divider {
+      display:flex; align-items:center; gap:10px;
+      color:rgba(255,255,255,0.14); font-size:9px; letter-spacing:3px;
+      font-family:'Orbitron',sans-serif;
+    }
+    .divider::before, .divider::after {
+      content:''; flex:1; height:1px;
+      background:linear-gradient(90deg, transparent, rgba(0,240,255,0.16), transparent);
+    }
+
+    /* ── BUTTON ── */
+    .btn-register {
+      width:100%; padding:15px 20px; margin-top:4px;
+      border-radius:14px; border:none; cursor:pointer;
+      font-family:'Orbitron',sans-serif; font-size:12px; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+      position:relative; overflow:hidden;
+      background:linear-gradient(135deg, #1c1200 0%, #2e2000 100%);
+      color:var(--gold); border:1px solid rgba(255,215,0,0.4);
+      box-shadow:0 0 24px rgba(255,215,0,0.2), 0 5px 20px rgba(0,0,0,0.4);
+      transition:transform 0.15s, box-shadow 0.2s;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .btn-register::before {
+      content:''; position:absolute; top:0; left:-80%;
+      width:55%; height:100%;
+      background:linear-gradient(90deg, transparent, rgba(255,215,0,0.22), transparent);
+      transform:skewX(-22deg); transition:left 0.5s ease;
+    }
+    .btn-register:hover::before { left:130%; }
+    .btn-register:hover {
+      background:linear-gradient(135deg, #2e2000 0%, #453100 100%);
+      border-color:rgba(255,215,0,0.8);
+      transform:translateY(-3px);
+      box-shadow:0 0 44px rgba(255,215,0,0.45), 0 10px 30px rgba(0,0,0,0.45);
+    }
+    .btn-register:active { transform:translateY(1px); }
+
+    /* ── MSG ── */
+    .msg {
+      font-size:12px; letter-spacing:0.5px; padding:10px 14px; border-radius:10px;
+      font-family:'Rajdhani',sans-serif; font-weight:600; display:none; text-align:center;
+    }
+    .msg.error   { background:rgba(255,60,60,0.1);  border:1px solid rgba(255,80,80,0.3);  color:#ff6b6b; display:block; }
+    .msg.success { background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.25); color:#00ff88; display:block; }
+
+    /* ── FORM FOOTER ── */
+    .form-footer {
+      display:flex; align-items:center; justify-content:center; gap:8px;
+      margin-top:14px; padding-top:14px;
+      border-top:1px solid rgba(0,240,255,0.07);
+    }
+    .footer-text { font-size:11px; color:rgba(255,255,255,0.25); font-family:'Rajdhani',sans-serif; letter-spacing:1px; }
+    .link-back {
+      font-size:11px; letter-spacing:1.5px; text-transform:uppercase;
+      color:rgba(0,240,255,0.45); text-decoration:none;
+      font-family:'Rajdhani',sans-serif; font-weight:700;
+      transition:color 0.2s;
+    }
+    .link-back:hover { color:var(--cyan); }
+
+    /* ── MOBILE ── */
+    @media (max-width:420px) {
+      .card         { padding:34px 20px 28px; }
+      .coin-halo    { width:74px; height:74px; }
+      .logo-title   { font-size:20px; letter-spacing:6px; }
+      .btn-register { padding:14px 16px; font-size:11px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-space"></div>
+<div class="bg-hex"></div>
+<div class="bg-scan"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+<div class="particles">
+  <div class="p"></div><div class="p"></div><div class="p"></div>
+  <div class="p"></div><div class="p"></div><div class="p"></div>
+  <div class="p"></div><div class="p"></div>
+</div>
+
+<div class="card-border">
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <div class="card">
+    <div class="logo-wrap">
+      <div class="coin-halo">
+        <div class="ring1"></div>
+        <div class="ring2"></div>
+        <div class="ring3"></div>
+        <img src="logoveltix.png" class="logo-img" alt="VELTIX">
+      </div>
+      <div class="logo-title">Welcome VELTIX</div>
+      <div class="page-title">&#10022; CREATE ACCOUNT &#10022;</div>
+    </div>
+
+    <form onsubmit="return false">
+      <div id="msg" class="msg"></div>
+
+      <!-- Email -->
+      <div class="field-label">Email</div>
+      <div class="input-wrap">
+        <input id="email" type="email" placeholder="your@email.com" autocomplete="email">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+        </svg>
+      </div>
+
+      <!-- Verify Email -->
+      <div class="field-label">Verify Email</div>
+      <div class="input-wrap">
+        <input id="email2" type="email" placeholder="Confirm your email" autocomplete="email">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+
+      <div class="divider">profile</div>
+
+      <!-- Nickname -->
+      <div class="field-label">Nickname</div>
+      <div class="input-wrap">
+        <input id="nickname" type="text" placeholder="Choose a nickname" autocomplete="username" class="gold-focus">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+
+      <div class="divider">security</div>
+
+      <!-- Password -->
+      <div class="field-label">Password</div>
+      <div class="input-wrap">
+        <input id="password" type="password" placeholder="Create a password" autocomplete="new-password">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="field-label">Confirm Password</div>
+      <div class="input-wrap">
+        <input id="repeat" type="password" placeholder="Repeat your password" autocomplete="new-password">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+
+      <button class="btn-register" onclick="doRegister()">&#10022; CREATE ACCOUNT</button>
+
+      <div class="form-footer">
+        <span class="footer-text">Already have an account?</span>
+        <a class="link-back" href="/signin.html">&#9889; Sign In</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  setDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCU5JdLURDc23XCZPZU49EIc_BdNgllsno",
+  authDomain: "veltix-game.firebaseapp.com",
+  projectId: "veltix-game"
+};
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+// 🔥 AUTO LOGIN — redirect if already authenticated
+onAuthStateChanged(auth, (user) => {
+  if (user && user.emailVerified) {
+    window.location.href = "/index.html";
+  }
+});
+
+function showMsg(text, type) {
+  const el = document.getElementById('msg');
+  el.textContent = text;
+  el.className = 'msg ' + type;
+}
+
+// 🆕 REGISTER
+window.doRegister = async function () {
+  const email    = document.getElementById("email").value.trim();
+  const email2   = document.getElementById("email2").value.trim();
+  const nickname = document.getElementById("nickname").value.trim();
+  const password = document.getElementById("password").value;
+  const repeat   = document.getElementById("repeat").value;
+
+  // Validation
+  if (!email || !email2 || !nickname || !password || !repeat) {
+    showMsg("Please fill in all fields.", "error"); return;
+  }
+  if (email !== email2) {
+    showMsg("Email addresses do not match.", "error"); return;
+  }
+  if (nickname.length < 3) {
+    showMsg("Nickname must be at least 3 characters.", "error"); return;
+  }
+  if (password.length < 6) {
+    showMsg("Password must be at least 6 characters.", "error"); return;
+  }
+  if (password !== repeat) {
+    showMsg("Passwords do not match.", "error"); return;
+  }
+
+  try {
+    // Create Firebase Auth user
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+
+    // Set displayName to nickname
+    await updateProfile(cred.user, { displayName: nickname });
+
+    // Send verification email
+    await sendEmailVerification(cred.user);
+
+    // Save user profile in Firestore
+    try {
+      await setDoc(doc(db, "users", cred.user.uid), {
+        uid:       cred.user.uid,
+        email:     email,
+        nickname:  nickname,
+        coins:     0,
+        level:     1,
+        createdAt: new Date().toISOString()
+      });
+    } catch (e) {
+      // Firestore may be unavailable — non-fatal
+    }
+
+    showMsg("Account created! Check your email to verify your address.", "success");
+
+    // Redirect to sign-in after short delay
+    setTimeout(() => { window.location.href = "/signin.html"; }, 3000);
+
+  } catch (err) {
+    showMsg(err.message, "error");
+  }
+};
+</script>
+
+</body>
+</html>

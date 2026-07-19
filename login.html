@@ -2,16 +2,16 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>VELTIX Auth</title>
+  <title>VELTIX</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --cyan:   #00f0ff;
-      --gold:   #ffd700;
-      --dark:   #020714;
+      --cyan: #00f0ff;
+      --gold: #ffd700;
+      --dark: #020714;
       --card-bg: rgba(4, 10, 28, 0.92);
     }
 
@@ -25,11 +25,7 @@
       overflow: hidden;
     }
 
-    /* ══════════════════════════════════════
-       BACKGROUND LAYERS
-    ══════════════════════════════════════ */
-
-    /* Deep space gradient */
+    /* ── BACKGROUND ── */
     .bg-space {
       position: fixed; inset: 0; z-index: 0;
       background:
@@ -38,8 +34,6 @@
         radial-gradient(ellipse 50%  40% at -5% 80%,  #012840 0%, transparent 50%),
         #020714;
     }
-
-    /* Hex dot grid — scrolling */
     .bg-hex {
       position: fixed; inset: 0; z-index: 1; pointer-events: none;
       background-image: radial-gradient(circle, rgba(0,240,255,0.14) 1px, transparent 1px);
@@ -47,23 +41,11 @@
       mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 20%, transparent 100%);
       animation: hexScroll 18s linear infinite;
     }
-    @keyframes hexScroll {
-      to { background-position: 36px 36px; }
-    }
-
-    /* Scanline overlay */
+    @keyframes hexScroll { to { background-position: 36px 36px; } }
     .bg-scan {
       position: fixed; inset: 0; z-index: 2; pointer-events: none;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 3px,
-        rgba(0,240,255,0.012) 3px,
-        rgba(0,240,255,0.012) 4px
-      );
+      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,240,255,0.012) 3px, rgba(0,240,255,0.012) 4px);
     }
-
-    /* Ambient orbs */
     .orb {
       position: fixed; border-radius: 50%; pointer-events: none; z-index: 1;
       filter: blur(100px); animation: orbDrift 12s ease-in-out infinite alternate;
@@ -71,399 +53,229 @@
     .orb1 { width: 600px; height: 600px; background: #00cfff; opacity: 0.08; top: -200px; left: -180px; }
     .orb2 { width: 440px; height: 440px; background: #ffc200; opacity: 0.07; bottom: -150px; right: -150px; animation-delay: -5s; }
     .orb3 { width: 280px; height: 280px; background: #7000ff; opacity: 0.09; top: 35%; left: 58%; animation-delay: -9s; }
-    @keyframes orbDrift {
-      from { transform: translate(0, 0) scale(1); }
-      to   { transform: translate(50px, 30px) scale(1.15); }
-    }
-
-    /* Floating particles */
+    @keyframes orbDrift { from { transform: translate(0,0) scale(1); } to { transform: translate(50px,30px) scale(1.15); } }
     .particles { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
-    .p {
-      position: absolute; border-radius: 50%; opacity: 0;
-      animation: floatUp linear infinite;
-    }
-    .p:nth-child(1)  { left:  5%; width:3px;height:3px; background:var(--gold);  animation-duration:10s; animation-delay:0s; }
-    .p:nth-child(2)  { left: 15%; width:2px;height:2px; background:var(--cyan);  animation-duration:13s; animation-delay:2.5s; }
-    .p:nth-child(3)  { left: 25%; width:2px;height:2px; background:var(--gold);  animation-duration: 8s; animation-delay:5s; }
-    .p:nth-child(4)  { left: 38%; width:2px;height:2px; background:var(--cyan);  animation-duration:11s; animation-delay:1s; }
-    .p:nth-child(5)  { left: 52%; width:3px;height:3px; background:var(--gold);  animation-duration: 7s; animation-delay:3s; }
-    .p:nth-child(6)  { left: 63%; width:2px;height:2px; background:var(--cyan);  animation-duration:14s; animation-delay:0.5s; }
-    .p:nth-child(7)  { left: 74%; width:2px;height:2px; background:var(--gold);  animation-duration: 9s; animation-delay:4.5s; }
-    .p:nth-child(8)  { left: 84%; width:2px;height:2px; background:var(--cyan);  animation-duration:11s; animation-delay:7s; }
-    .p:nth-child(9)  { left: 44%; width:3px;height:3px; background:var(--cyan);  animation-duration:16s; animation-delay:2s; }
-    .p:nth-child(10) { left: 70%; width:2px;height:2px; background:var(--gold);  animation-duration: 6s; animation-delay:1.5s; }
-    .p:nth-child(11) { left: 92%; width:2px;height:2px; background:var(--cyan);  animation-duration:12s; animation-delay:8s; }
-    .p:nth-child(12) { left: 30%; width:2px;height:2px; background:var(--gold);  animation-duration: 9s; animation-delay:3.5s; }
+    .p { position: absolute; border-radius: 50%; opacity: 0; animation: floatUp linear infinite; }
+    .p:nth-child(1)  { left: 5%;  width:3px;height:3px; background:var(--gold); animation-duration:10s; animation-delay:0s; }
+    .p:nth-child(2)  { left: 15%; width:2px;height:2px; background:var(--cyan); animation-duration:13s; animation-delay:2.5s; }
+    .p:nth-child(3)  { left: 25%; width:2px;height:2px; background:var(--gold); animation-duration: 8s; animation-delay:5s; }
+    .p:nth-child(4)  { left: 38%; width:2px;height:2px; background:var(--cyan); animation-duration:11s; animation-delay:1s; }
+    .p:nth-child(5)  { left: 52%; width:3px;height:3px; background:var(--gold); animation-duration: 7s; animation-delay:3s; }
+    .p:nth-child(6)  { left: 63%; width:2px;height:2px; background:var(--cyan); animation-duration:14s; animation-delay:0.5s; }
+    .p:nth-child(7)  { left: 74%; width:2px;height:2px; background:var(--gold); animation-duration: 9s; animation-delay:4.5s; }
+    .p:nth-child(8)  { left: 84%; width:2px;height:2px; background:var(--cyan); animation-duration:11s; animation-delay:7s; }
+    .p:nth-child(9)  { left: 44%; width:3px;height:3px; background:var(--cyan); animation-duration:16s; animation-delay:2s; }
+    .p:nth-child(10) { left: 70%; width:2px;height:2px; background:var(--gold); animation-duration: 6s; animation-delay:1.5s; }
     @keyframes floatUp {
-      0%   { transform: translateY(108vh); opacity: 0; }
-      8%   { opacity: 0.8; }
-      92%  { opacity: 0.4; }
-      100% { transform: translateY(-8vh) translateX(24px); opacity: 0; }
+      0%   { transform: translateY(108vh); opacity:0; }
+      8%   { opacity:0.8; }
+      92%  { opacity:0.4; }
+      100% { transform: translateY(-8vh) translateX(24px); opacity:0; }
     }
 
-    /* ══════════════════════════════════════
-       CARD
-    ══════════════════════════════════════ */
-
-    /* Spinning border wrapper */
+    /* ── CARD ── */
     .card-border {
       position: relative; z-index: 10;
-      width: min(400px, 96vw);
-      padding: 2px;
-      border-radius: 30px;
-      background: conic-gradient(
-        from var(--angle, 0deg),
-        #003a5c, #00f0ff, #ffd700, #00f0ff, #003a5c
-      );
+      width: min(400px, 94vw);
+      padding: 2px; border-radius: 30px;
+      background: conic-gradient(from var(--angle,0deg), #003a5c, #00f0ff, #ffd700, #00f0ff, #003a5c);
       animation: cardIn 0.9s cubic-bezier(0.22,1,0.36,1) both, borderSpin 4s linear infinite;
     }
-    @property --angle {
-      syntax: '<angle>'; initial-value: 0deg; inherits: false;
-    }
+    @property --angle { syntax:'<angle>'; initial-value:0deg; inherits:false; }
     @keyframes borderSpin { to { --angle: 360deg; } }
     @keyframes cardIn {
-      from { opacity: 0; transform: translateY(40px) scale(0.94); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
+      from { opacity:0; transform:translateY(40px) scale(0.94); }
+      to   { opacity:1; transform:translateY(0)    scale(1); }
     }
-
     .card {
       border-radius: 28px;
-      padding: 48px 40px 40px;
+      padding: 52px 40px 44px;
       background: var(--card-bg);
       backdrop-filter: blur(32px);
       box-shadow:
         0 0 100px rgba(0,240,255,0.06),
         0 0 40px  rgba(255,215,0,0.04),
         0 30px 80px rgba(0,0,0,0.8),
-        inset 0 1px 0 rgba(255,255,255,0.06),
-        inset 0 -1px 0 rgba(0,240,255,0.04);
-      /* subtle circuit lines */
+        inset 0 1px 0 rgba(255,255,255,0.06);
       background-image:
         linear-gradient(rgba(0,240,255,0.022) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0,240,255,0.022) 1px, transparent 1px),
         linear-gradient(var(--card-bg), var(--card-bg));
       background-size: 44px 44px, 44px 44px, 100% 100%;
+      text-align: center;
     }
-
-    /* Horizontal neon bar top */
     .card::before {
       content: '';
-      position: absolute; top: 0; left: 12%; right: 12%; height: 2px;
-      border-radius: 2px;
+      position: absolute; top: 0; left: 12%; right: 12%; height: 2px; border-radius: 2px;
       background: linear-gradient(90deg, transparent, var(--cyan) 30%, var(--gold) 70%, transparent);
       animation: topBarPulse 3s ease-in-out infinite alternate;
-      border-radius: 28px 28px 0 0;
     }
     @keyframes topBarPulse {
-      0%   { opacity: 0.55; filter: blur(0); }
-      100% { opacity: 1;    filter: blur(1.5px); }
+      0%   { opacity:0.55; filter:blur(0); }
+      100% { opacity:1;    filter:blur(1.5px); }
     }
+    .corner { position:absolute; width:20px; height:20px; border-color:rgba(0,240,255,0.5); border-style:solid; }
+    .corner-tl { top:14px; left:14px;    border-width:2px 0 0 2px; border-radius:5px 0 0 0; }
+    .corner-tr { top:14px; right:14px;   border-width:2px 2px 0 0; border-radius:0 5px 0 0; }
+    .corner-bl { bottom:14px; left:14px;  border-width:0 0 2px 2px; border-radius:0 0 0 5px; }
+    .corner-br { bottom:14px; right:14px; border-width:0 2px 2px 0; border-radius:0 0 5px 0; }
 
-    /* Corner brackets */
-    .corner {
-      position: absolute; width: 20px; height: 20px;
-      border-color: rgba(0,240,255,0.5); border-style: solid;
-      transition: border-color 0.3s;
-    }
-    .card-border:hover .corner { border-color: rgba(0,240,255,0.9); }
-    .corner-tl { top: 14px; left: 14px;    border-width: 2px 0 0 2px; border-radius: 5px 0 0 0; }
-    .corner-tr { top: 14px; right: 14px;   border-width: 2px 2px 0 0; border-radius: 0 5px 0 0; }
-    .corner-bl { bottom: 14px; left: 14px;  border-width: 0 0 2px 2px; border-radius: 0 0 0 5px; }
-    .corner-br { bottom: 14px; right: 14px; border-width: 0 2px 2px 0; border-radius: 0 0 5px 0; }
-
-    /* ══════════════════════════════════════
-       COIN LOGO
-    ══════════════════════════════════════ */
-    .logo-wrap {
-      display: flex; flex-direction: column; align-items: center;
-      margin-bottom: 34px;
-    }
-
-    /* Outer ambient halo */
+    /* ── COIN LOGO ── */
+    .logo-wrap { display:flex; flex-direction:column; align-items:center; margin-bottom:36px; }
     .coin-halo {
-      width: 136px; height: 136px;
-      position: relative; margin-bottom: 20px;
-      filter:
-        drop-shadow(0 0 22px rgba(0,240,255,0.55))
-        drop-shadow(0 0 44px rgba(255,215,0,0.28));
+      width:148px; height:148px; position:relative; margin-bottom:22px;
+      filter: drop-shadow(0 0 26px rgba(0,240,255,0.6)) drop-shadow(0 0 52px rgba(255,215,0,0.32));
       animation: coinFloat 4.5s ease-in-out infinite;
     }
-    @keyframes coinFloat {
-      0%,100% { transform: translateY(0); }
-      50%      { transform: translateY(-8px); }
-    }
-
-    /* Ring 1 — outermost, gold, slow CW */
+    @keyframes coinFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
     .ring1 {
-      position: absolute; inset: -12px; border-radius: 50%;
-      background: conic-gradient(
-        from 0deg,
-        #5a3800 0%, #ffd700 18%, #ffe87a 36%, #ffd700 54%, #8a5800 72%, #ffd700 90%, #5a3800 100%
-      );
+      position:absolute; inset:-14px; border-radius:50%;
+      background: conic-gradient(from 0deg, #5a3800 0%, #ffd700 18%, #ffe87a 36%, #ffd700 54%, #8a5800 72%, #ffd700 90%, #5a3800 100%);
       animation: spinCW 7s linear infinite;
     }
-    .ring1::after {
-      content: ''; position: absolute; inset: 6px;
-      border-radius: 50%; background: var(--card-bg);
-    }
-
-    /* Ring 2 — mid, cyan dashes, CCW */
+    .ring1::after { content:''; position:absolute; inset:7px; border-radius:50%; background:var(--card-bg); }
     .ring2 {
-      position: absolute; inset: -4px; border-radius: 50%;
-      background: conic-gradient(
-        from 0deg,
-        transparent 0deg,   #00f0ff 50deg,  transparent 100deg,
-        transparent 130deg, #00d4e8 180deg, transparent 230deg,
-        transparent 250deg, #00f0ff 300deg, transparent 350deg
-      );
+      position:absolute; inset:-4px; border-radius:50%;
+      background: conic-gradient(from 0deg, transparent 0deg, #00f0ff 50deg, transparent 100deg, transparent 130deg, #00d4e8 180deg, transparent 230deg, transparent 250deg, #00f0ff 300deg, transparent 350deg);
       animation: spinCCW 3.5s linear infinite;
     }
-    .ring2::after {
-      content: ''; position: absolute; inset: 5px;
-      border-radius: 50%; background: var(--card-bg);
-    }
-
-    /* Ring 3 — innermost, subtle white shimmer, CW fast */
+    .ring2::after { content:''; position:absolute; inset:5px; border-radius:50%; background:var(--card-bg); }
     .ring3 {
-      position: absolute; inset: 4px; border-radius: 50%;
-      background: conic-gradient(
-        from 0deg,
-        transparent 0deg, rgba(255,255,255,0.25) 30deg, transparent 60deg,
-        transparent 180deg, rgba(0,240,255,0.2) 210deg, transparent 240deg
-      );
+      position:absolute; inset:4px; border-radius:50%;
+      background: conic-gradient(from 0deg, transparent 0deg, rgba(255,255,255,0.2) 30deg, transparent 60deg, transparent 180deg, rgba(0,240,255,0.18) 210deg, transparent 240deg);
       animation: spinCW 2s linear infinite;
     }
-    .ring3::after {
-      content: ''; position: absolute; inset: 5px;
-      border-radius: 50%; background: transparent;
-    }
-
-    /* Logo image */
     .logo-img {
-      position: absolute; inset: 0; width: 100%; height: 100%;
-      border-radius: 50%; object-fit: cover;
-      border: 2px solid rgba(255,215,0,0.35);
+      position:absolute; inset:0; width:100%; height:100%;
+      border-radius:50%; object-fit:cover;
+      border:2px solid rgba(255,215,0,0.35);
       animation: coinTilt 6s ease-in-out infinite;
     }
     @keyframes coinTilt {
-      0%   { transform: perspective(320px) rotateY(0deg)   scale(1); }
-      25%  { transform: perspective(320px) rotateY(14deg)  scale(1.03); }
-      50%  { transform: perspective(320px) rotateY(0deg)   scale(1); }
-      75%  { transform: perspective(320px) rotateY(-14deg) scale(1.03); }
-      100% { transform: perspective(320px) rotateY(0deg)   scale(1); }
+      0%   { transform:perspective(320px) rotateY(0deg)   scale(1); }
+      25%  { transform:perspective(320px) rotateY(14deg)  scale(1.03); }
+      50%  { transform:perspective(320px) rotateY(0deg)   scale(1); }
+      75%  { transform:perspective(320px) rotateY(-14deg) scale(1.03); }
+      100% { transform:perspective(320px) rotateY(0deg)   scale(1); }
     }
-
-    /* Online dot */
     .live-dot {
-      position: absolute; bottom: 6px; right: 6px; z-index: 5;
-      width: 13px; height: 13px; border-radius: 50%;
-      background: #00ff88;
-      border: 2px solid var(--card-bg);
-      box-shadow: 0 0 10px #00ff88, 0 0 20px rgba(0,255,136,0.5);
+      position:absolute; bottom:6px; right:6px; z-index:5;
+      width:14px; height:14px; border-radius:50%;
+      background:#00ff88; border:2px solid var(--card-bg);
+      box-shadow:0 0 10px #00ff88, 0 0 22px rgba(0,255,136,0.5);
       animation: dotPulse 2s ease-in-out infinite;
     }
-    @keyframes dotPulse {
-      0%,100% { box-shadow: 0 0 8px #00ff88; }
-      50%      { box-shadow: 0 0 16px #00ff88, 0 0 32px rgba(0,255,136,0.45); }
-    }
+    @keyframes dotPulse { 0%,100%{box-shadow:0 0 8px #00ff88;} 50%{box-shadow:0 0 18px #00ff88,0 0 36px rgba(0,255,136,0.45);} }
+    @keyframes spinCW  { to { transform:rotate( 360deg); } }
+    @keyframes spinCCW { to { transform:rotate(-360deg); } }
 
-    @keyframes spinCW  { to { transform: rotate( 360deg); } }
-    @keyframes spinCCW { to { transform: rotate(-360deg); } }
-
-    /* Title */
+    /* ── HEADINGS ── */
     .logo-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 32px; font-weight: 900;
-      letter-spacing: 10px; text-transform: uppercase;
-      background: linear-gradient(90deg, var(--cyan) 0%, var(--gold) 40%, #ffe97a 60%, var(--cyan) 100%);
-      background-size: 260% auto;
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: shimmer 3s linear infinite;
-      line-height: 1;
-      text-shadow: none;
+      font-family:'Orbitron',sans-serif;
+      font-size:34px; font-weight:900; letter-spacing:11px; text-transform:uppercase;
+      background:linear-gradient(90deg, var(--cyan) 0%, var(--gold) 40%, #ffe97a 60%, var(--cyan) 100%);
+      background-size:260% auto;
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+      animation:shimmer 3s linear infinite; line-height:1;
     }
-    @keyframes shimmer { to { background-position: 260% center; } }
-
+    @keyframes shimmer { to { background-position:260% center; } }
     .logo-sub {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 10px; letter-spacing: 5px;
-      color: rgba(0,240,255,0.4);
-      text-transform: uppercase; margin-top: 7px;
+      font-size:10px; letter-spacing:5px; color:rgba(0,240,255,0.38);
+      text-transform:uppercase; margin-top:7px;
+      font-family:'Rajdhani',sans-serif;
+    }
+    .welcome-text {
+      font-family:'Orbitron',sans-serif;
+      font-size:13px; font-weight:700; letter-spacing:6px; text-transform:uppercase;
+      color:rgba(255,255,255,0.55);
+      margin-bottom:32px;
+    }
+    .welcome-text span {
+      background:linear-gradient(90deg, var(--cyan), var(--gold));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
     }
 
-    /* ══════════════════════════════════════
-       FORM
-    ══════════════════════════════════════ */
-    form { display: flex; flex-direction: column; gap: 12px; }
+    /* ── LANDING BUTTONS ── */
+    .btn-group { display:flex; flex-direction:column; gap:14px; }
+    .btn-main {
+      width:100%; padding:17px 20px; border-radius:14px; border:none; cursor:pointer;
+      font-family:'Orbitron',sans-serif;
+      font-size:12px; font-weight:700; letter-spacing:4px; text-transform:uppercase;
+      position:relative; overflow:hidden;
+      transition:transform 0.15s, box-shadow 0.2s;
+      -webkit-tap-highlight-color:transparent; text-decoration:none; display:block;
+    }
+    .btn-main::before {
+      content:''; position:absolute; top:0; left:-80%;
+      width:55%; height:100%;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+      transform:skewX(-22deg); transition:left 0.5s ease;
+    }
+    .btn-main:hover::before { left:130%; }
+    .btn-cyan {
+      background:linear-gradient(135deg, #009ab5 0%, #00e5ff 45%, #009ab5 100%);
+      color:#020d20;
+      box-shadow:0 0 30px rgba(0,240,255,0.5), 0 5px 20px rgba(0,0,0,0.4);
+    }
+    .btn-cyan:hover { transform:translateY(-3px); box-shadow:0 0 52px rgba(0,240,255,0.75), 0 10px 30px rgba(0,0,0,0.45); }
+    .btn-cyan:active { transform:translateY(1px); }
+    .btn-gold {
+      background:linear-gradient(135deg, #1c1200 0%, #2e2000 100%);
+      color:var(--gold); border:1px solid rgba(255,215,0,0.4);
+      box-shadow:0 0 22px rgba(255,215,0,0.18), 0 5px 20px rgba(0,0,0,0.4);
+    }
+    .btn-gold:hover {
+      background:linear-gradient(135deg, #2e2000 0%, #453100 100%);
+      border-color:rgba(255,215,0,0.8);
+      transform:translateY(-3px);
+      box-shadow:0 0 44px rgba(255,215,0,0.45), 0 10px 30px rgba(0,0,0,0.45);
+    }
+    .btn-gold:active { transform:translateY(1px); }
 
-    .input-wrap { position: relative; }
-
-    .input-wrap svg {
-      position: absolute; left: 15px; top: 50%;
-      transform: translateY(-50%);
-      width: 16px; height: 16px;
-      opacity: 0.3; pointer-events: none;
-      transition: opacity 0.2s, filter 0.2s;
-    }
-    .input-wrap:focus-within svg {
-      opacity: 1;
-      filter: drop-shadow(0 0 6px currentColor);
-    }
-
-    input {
-      width: 100%;
-      padding: 14px 15px 14px 44px;
-      border-radius: 13px;
-      border: 1px solid rgba(0,240,255,0.12);
-      background: rgba(0,240,255,0.03);
-      color: #fff;
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 15px; font-weight: 600;
-      letter-spacing: 0.5px;
-      outline: none;
-      transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
-    }
-    input::placeholder { color: rgba(255,255,255,0.22); font-weight: 400; }
-    input:focus {
-      border-color: rgba(0,240,255,0.5);
-      background: rgba(0,240,255,0.055);
-      box-shadow: 0 0 0 3px rgba(0,240,255,0.09), 0 0 24px rgba(0,240,255,0.09);
-    }
-
-    /* ══════════════════════════════════════
-       BUTTONS
-    ══════════════════════════════════════ */
-
-    /* Shared */
-    .btn-login, .btn-register {
-      width: 100%; padding: 15px 20px;
-      border-radius: 14px; border: none; cursor: pointer;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 12px; font-weight: 700; letter-spacing: 3px;
-      text-transform: uppercase;
-      position: relative; overflow: hidden;
-      transition: transform 0.15s, box-shadow 0.2s;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    /* Shine sweep */
-    .btn-login::before, .btn-register::before {
-      content: '';
-      position: absolute; top: 0; left: -80%;
-      width: 55%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-      transform: skewX(-22deg);
-      transition: left 0.5s ease;
-    }
-    .btn-login:hover::before, .btn-register:hover::before { left: 130%; }
-
-    /* Bottom glint line */
-    .btn-login::after, .btn-register::after {
-      content: '';
-      position: absolute; bottom: 0; left: 15%; right: 15%; height: 1px;
-      opacity: 0.6;
-    }
-
-    /* LOGIN — cyan */
-    .btn-login {
-      background: linear-gradient(135deg, #009ab5 0%, #00e5ff 45%, #009ab5 100%);
-      background-size: 200% auto;
-      color: #020d20;
-      box-shadow: 0 0 28px rgba(0,240,255,0.45), 0 5px 20px rgba(0,0,0,0.4);
-    }
-    .btn-login::after { background: rgba(255,255,255,0.4); }
-    .btn-login:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 0 48px rgba(0,240,255,0.7), 0 10px 30px rgba(0,0,0,0.45);
-    }
-    .btn-login:active { transform: translateY(1px); }
-
-    /* REGISTER — gold */
-    .btn-register {
-      background: linear-gradient(135deg, #1c1200 0%, #2e2000 100%);
-      color: var(--gold);
-      border: 1px solid rgba(255,215,0,0.4);
-      box-shadow: 0 0 20px rgba(255,215,0,0.15), 0 5px 20px rgba(0,0,0,0.4);
-    }
-    .btn-register::after { background: rgba(255,215,0,0.35); }
-    .btn-register:hover {
-      background: linear-gradient(135deg, #2e2000 0%, #453100 100%);
-      border-color: rgba(255,215,0,0.8);
-      transform: translateY(-3px);
-      box-shadow: 0 0 40px rgba(255,215,0,0.4), 0 10px 30px rgba(0,0,0,0.45);
-    }
-    .btn-register:active { transform: translateY(1px); }
-
-    /* Divider */
-    .divider {
-      display: flex; align-items: center; gap: 12px;
-      color: rgba(255,255,255,0.16);
-      font-size: 10px; letter-spacing: 3px;
-      font-family: 'Orbitron', sans-serif;
-    }
-    .divider::before, .divider::after {
-      content: ''; flex: 1; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0,240,255,0.2), transparent);
-    }
-
-    /* ══════════════════════════════════════
-       SECURITY BADGE
-    ══════════════════════════════════════ */
+    /* ── BADGE ── */
     .badge {
-      display: flex; align-items: center; justify-content: center; gap: 7px;
-      margin-top: 18px;
-      font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase;
-      color: rgba(0,240,255,0.28);
-      font-family: 'Rajdhani', sans-serif;
+      display:flex; align-items:center; justify-content:center; gap:7px;
+      margin-top:24px;
+      font-size:9px; letter-spacing:2.5px; text-transform:uppercase;
+      color:rgba(0,240,255,0.25); font-family:'Rajdhani',sans-serif;
     }
-    .badge svg { width: 11px; height: 11px; opacity: 0.4; }
+    .badge svg { width:11px; height:11px; opacity:0.4; }
 
-    /* ══════════════════════════════════════
-       MOBILE
-    ══════════════════════════════════════ */
-    @media (max-width: 420px) {
-      .card            { padding: 38px 24px 30px; }
-      .coin-halo       { width: 108px; height: 108px; }
-      .logo-title      { font-size: 26px; letter-spacing: 7px; }
-      .btn-login,
-      .btn-register    { padding: 14px 16px; font-size: 11px; }
+    /* ── MOBILE ── */
+    @media (max-width:420px) {
+      .card         { padding:40px 24px 32px; }
+      .coin-halo    { width:116px; height:116px; }
+      .logo-title   { font-size:28px; letter-spacing:8px; }
+      .btn-main     { padding:15px 16px; font-size:11px; }
     }
-    @media (max-height: 680px) {
-      .logo-wrap       { margin-bottom: 22px; }
-      .coin-halo       { width: 100px; height: 100px; margin-bottom: 14px; }
+    @media (max-height:680px) {
+      .logo-wrap    { margin-bottom:24px; }
+      .coin-halo    { width:106px; height:106px; margin-bottom:14px; }
     }
   </style>
 </head>
 <body>
 
-<!-- Background -->
 <div class="bg-space"></div>
 <div class="bg-hex"></div>
 <div class="bg-scan"></div>
 <div class="orb orb1"></div>
 <div class="orb orb2"></div>
 <div class="orb orb3"></div>
-
-<!-- Particles -->
 <div class="particles">
   <div class="p"></div><div class="p"></div><div class="p"></div>
   <div class="p"></div><div class="p"></div><div class="p"></div>
   <div class="p"></div><div class="p"></div><div class="p"></div>
-  <div class="p"></div><div class="p"></div><div class="p"></div>
+  <div class="p"></div>
 </div>
 
-<!-- Card with animated conic border -->
 <div class="card-border">
-  <!-- Corner brackets -->
   <div class="corner corner-tl"></div>
   <div class="corner corner-tr"></div>
   <div class="corner corner-bl"></div>
   <div class="corner corner-br"></div>
 
   <div class="card">
-
-    <!-- Coin logo -->
     <div class="logo-wrap">
       <div class="coin-halo">
         <div class="ring1"></div>
@@ -476,60 +288,25 @@
       <div class="logo-sub">Tap &middot; Earn &middot; Conquer</div>
     </div>
 
-    <form onsubmit="return false">
-      <!-- Email -->
-      <div class="input-wrap">
-        <input id="email" type="email" placeholder="Email address" autocomplete="email">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="4" width="20" height="16" rx="2"/>
-          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-        </svg>
-      </div>
+    <div class="welcome-text">&#9670; <span>WELCOME BACK</span> &#9670;</div>
 
-      <!-- Password -->
-      <div class="input-wrap">
-        <input id="password" type="password" placeholder="Password" autocomplete="current-password">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="11" width="18" height="11" rx="2"/>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-        </svg>
-      </div>
+    <div class="btn-group">
+      <a class="btn-main btn-cyan" href="/signin.html">&#9889; LOGIN</a>
+      <a class="btn-main btn-gold" href="/register.html">&#10022; CREATE ACCOUNT</a>
+    </div>
 
-      <!-- Repeat password -->
-      <div class="input-wrap">
-        <input id="repeat" type="password" placeholder="Repeat Password" autocomplete="new-password">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-        </svg>
-      </div>
-
-      <button class="btn-login" onclick="login()">&#9889; Login</button>
-
-      <div class="divider">or</div>
-
-      <button class="btn-register" onclick="register()">&#10022; Create Account</button>
-    </form>
-
-    <!-- Security badge -->
     <div class="badge">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
       </svg>
       Secured by Firebase &nbsp;·&nbsp; AES-256
     </div>
-
-  </div><!-- .card -->
-</div><!-- .card-border -->
+  </div>
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCU5JdLURDc23XCZPZU49EIc_BdNgllsno",
@@ -540,47 +317,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// 🔥 AUTO LOGIN
+// 🔥 AUTO LOGIN — redirect if already authenticated
 onAuthStateChanged(auth, (user) => {
   if (user && user.emailVerified) {
     window.location.href = "/index.html";
   }
 });
-
-// 🔑 LOGIN
-window.login = function () {
-  let email = document.getElementById("email").value;
-  let password = document.getElementById("password").value;
-
-  signInWithEmailAndPassword(auth, email, password)
-    .then((cred) => {
-      if (!cred.user.emailVerified) {
-        alert("Email tasdiqlanmagan!");
-        return;
-      }
-      window.location.href = "/index.html";
-    })
-    .catch(err => alert(err.message));
-};
-
-// 🆕 REGISTER
-window.register = function () {
-  let email = document.getElementById("email").value;
-  let password = document.getElementById("password").value;
-  let repeat = document.getElementById("repeat").value;
-
-  if (password !== repeat) {
-    alert("Parollar mos emas!");
-    return;
-  }
-
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((cred) => {
-      sendEmailVerification(cred.user);
-      alert("Emailga tasdiqlash link yuborildi!");
-    })
-    .catch(err => alert(err.message));
-};
 </script>
 
 </body>
