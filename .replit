@@ -36,3 +36,7 @@ outputType = "webview"
 [postMerge]
 path = "scripts/post-merge.sh"
 timeoutMs = 30000
+
+[deployment]
+deploymentTarget = "static"
+publicDir = "."
