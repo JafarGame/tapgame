@@ -1136,7 +1136,7 @@ const RANKS = [
 ];
 
 /* ── State ─────────────────────────────────────────────────── */
-let G = { coin: 0, level: 1, energy: BASE_ENERGY, tapLvl: 0, energyLvl: 0 };
+let G = { coin: 0, level: 1, energy: BASE_ENERGY, tapLvl: 0, energyLvl: 0, totalTaps: 0 };
 function getMaxEnergy() { return BASE_ENERGY + G.energyLvl * 100; }
 let userRef   = null;
 let saveTimer = null;
@@ -1173,11 +1173,18 @@ async function loadData() {
       const d = snap.data();
       G.coin       = d.coin       ?? 0;
       G.level      = d.level      ?? 1;
-      G.energy     = Math.min(d.energy ?? BASE_ENERGY, getMaxEnergy());
       G.tapLvl     = d.tapLvl     ?? 0;
       G.energyLvl  = d.energyLvl  ?? 0;
+      G.totalTaps  = d.totalTaps  ?? 0;
       // Re-cap energy now that energyLvl is known
-      G.energy     = Math.min(G.energy, getMaxEnergy());
+      G.energy     = Math.min(d.energy ?? BASE_ENERGY, getMaxEnergy());
+      // Mirror totalTaps into localStorage so earn.html / profile.html can read it
+      try {
+        const statsKey = "veltix_" + (userRef.id) + "_stats";
+        const st = JSON.parse(localStorage.getItem(statsKey) || "{}");
+        st.totalTaps = G.totalTaps;
+        localStorage.setItem(statsKey, JSON.stringify(st));
+      } catch (_) {}
     }
   } catch (e) { console.warn("Load failed:", e.message); }
 }
@@ -1186,7 +1193,7 @@ function save() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
     if (!userRef) return;
-    setDoc(userRef, { coin: G.coin, level: G.level, energy: G.energy, tapLvl: G.tapLvl, energyLvl: G.energyLvl }, { merge: true })
+    setDoc(userRef, { coin: G.coin, level: G.level, energy: G.energy, tapLvl: G.tapLvl, energyLvl: G.energyLvl, totalTaps: G.totalTaps }, { merge: true })
       .catch(e => console.warn("Save failed:", e.message));
   }, SAVE_DELAY);
 }
@@ -1382,8 +1389,17 @@ window.doTap = function(ev) {
   if (G.energy <= 0) { shakeEmpty(x, y); return; }
 
   const power = Math.floor((G.level - 1) / 10) + 1 + G.tapLvl;
-  G.coin  += power;
-  G.energy = Math.max(0, G.energy - 1);
+  G.coin      += power;
+  G.energy     = Math.max(0, G.energy - 1);
+  G.totalTaps += 1;
+
+  // Mirror totalTaps to localStorage so earn.html / profile.html stay current
+  try {
+    const statsKey = "veltix_" + userRef.id + "_stats";
+    const st = JSON.parse(localStorage.getItem(statsKey) || "{}");
+    st.totalTaps = G.totalTaps;
+    localStorage.setItem(statsKey, JSON.stringify(st));
+  } catch (_) {}
 
   // Subtle haptic on mobile
   if (navigator.vibrate) navigator.vibrate(8);
