@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>VELTIX — Sign In</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sign in to your VELTIX account and continue earning coins.">
+  <meta name="theme-color" content="#00f0ff">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -339,10 +341,10 @@ const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 
-// 🔥 AUTO LOGIN
+// AUTO LOGIN
 onAuthStateChanged(auth, (user) => {
   if (user && user.emailVerified) {
-    window.location.href = "/index.html";
+    window.location.href = "/dashboard.html";
   }
 });
 
@@ -381,7 +383,7 @@ window.doLogin = async function () {
         showMsg("Email not verified. Check your inbox.", "error");
         return;
       }
-      window.location.href = "/index.html";
+      window.location.href = "/dashboard.html";
     })
     .catch(err => showMsg(err.message, "error"));
 };
