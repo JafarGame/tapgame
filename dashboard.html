@@ -1398,6 +1398,8 @@ window.doTap = function(ev) {
 let toastTimer = null;
 
 window.goTab = function(tab, el) {
+  if (tab === "earn") { window.location.href = "/earn.html"; return; }
+
   document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
   el.classList.add("active");
 
